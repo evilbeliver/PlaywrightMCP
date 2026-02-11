@@ -6,6 +6,11 @@ mode: 'agent'
 - You are given a scenario and you need to generate a playwright test for it.
 - DO NOT generate test code based on the scenario alone. 
 - DO run steps one by one using the tools provided by the Playwright MCP.
+- When given a User Journey or a scenario 
+  1. Focus on end to end testing.
+  2. Generate tests that cover the entire user journey.
+  3. Expected results must describe the system behavior.
+  4. Assertions must be included to verify the expected behavior
 - When asked to explore a website:
   1. Navigate to the specified URL
   2. Explore 1 key functionality of the site and when finished close the browser.
@@ -13,4 +18,5 @@ mode: 'agent'
 - Save generated test file in the tests directory
 - Execute the test file and iterate until the test passes
 - Include appropriate assertions to verify the expected behavior
+- Code structured according to best development practices
 - Structure tests properly with descriptive test titles and comments
