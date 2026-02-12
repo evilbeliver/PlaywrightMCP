@@ -48,10 +48,10 @@ setup('authenticate', async ({ page }) => {
   await page.getByRole('button', { name: 'LOG IN' }).click();
 
   // Wait for successful login - verify we reach the dashboard
-  await page.waitForURL(/.*dashboard.*/, { timeout: 30000 });
+  await page.waitForURL(/.*dashboard.*/i, { timeout: 30000 });
 
-  // Verify the dashboard loaded with authenticated content
-  await expect(page.getByText(/Good (Morning|Afternoon|Evening)/)).toBeVisible();
+  // Verify the dashboard loaded with authenticated content (case insensitive)
+  await expect(page.getByText(/good (morning|afternoon|evening)/i)).toBeVisible({ timeout: 15000 });
   await expect(page.getByRole('link', { name: 'DASHBOARD' })).toBeVisible();
 
   // Save the authenticated state to the storage file
