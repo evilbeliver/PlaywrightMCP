@@ -13,10 +13,16 @@ mode: 'agent'
   4. Assertions must be included to verify the expected behavior
 - When asked to explore a website:
   1. Navigate to the specified URL
-  2. Explore 1 key functionality of the site and when finished close the browser.
+  2. Explore the key functionality of the entire site and when finished close the browser.
   3. Implement a Playwright TypeScript test that uses @playwright/test based on message history using Playwright's best practices including role based locators, auto retrying assertions and with no added timeouts unless necessary as Playwright has built in retries and autowaiting if the correct locators and assertions are used.
 - Save generated test file in the tests directory
 - Execute the test file and iterate until the test passes
 - Include appropriate assertions to verify the expected behavior
 - Code structured according to best development practices
 - Structure tests properly with descriptive test titles and comments
+- Focus on ensuring tests are reliable and maintainable
+- Keep Tests Independent and Isolated: Each test should run independently and not rely on the state or outcome of another test. Use fixtures or setup/teardown functions to ensure a clean testing environment for each test run.
+- Use Descriptive Test Titles and Comments: Write clear and descriptive test titles that explain the purpose of the test. Include comments in the test code to clarify complex logic or important steps, making it easier for other developers to understand the intent of the test.
+- Implement Assertions Effectively: Use assertions to verify that the application behaves as expected. Ensure that assertions are meaningful and provide clear feedback when a test fails, helping to quickly identify the issue.
+- Avoid Hardcoding Values: Instead of hardcoding values in your tests, use variables or test data management strategies to make your tests more flexible and maintainable. This allows for easier updates and reduces the risk of errors when changes occur in the application.
+- Avoid Complex Logic: Tests should be simple and straightforward, avoiding logical conditions (if, for, while) within the test logic itself to prevent bugs in the test suite. Use parameterized tests to test multiple inputs/outputs without repeating logic.
