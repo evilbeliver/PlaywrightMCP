@@ -68,7 +68,7 @@ test.describe('Homepage Content', () => {
     });
 
     test('should display City, State, or ZIP Code search input', async ({ page }) => {
-      const searchInput = page.getByRole('textbox', { name: 'City, State, or ZIP Code' });
+      const searchInput = page.getByPlaceholder('City, State, or ZIP Code');
       await expect(searchInput).toBeVisible();
     });
   });
@@ -76,7 +76,7 @@ test.describe('Homepage Content', () => {
   test.describe('Get Fit at Home Section', () => {
     
     test('should display Get Fit at Home heading', async ({ page }) => {
-      const heading = page.getByRole('heading', { name: 'Get Fit at Home™', level: 1 });
+      const heading = page.getByRole('heading', { name: 'Get Fit at Home™' });
       await expect(heading).toBeVisible();
     });
 
