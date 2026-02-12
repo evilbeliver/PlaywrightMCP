@@ -4,12 +4,18 @@ export default defineConfig({
   testDir: './tests',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : undefined,
+  retries: process.env.CI ? 2 : 1,
+  workers: process.env.CI ? 1 : 2,
   reporter: 'html',
+  timeout: 60000, // 60 second timeout for slow network
+  expect: {
+    timeout: 10000, // 10 second timeout for assertions
+  },
   use: {
     baseURL: 'https://www.silverandfit.com',
     trace: 'on-first-retry',
+    navigationTimeout: 45000, // 45 second navigation timeout
+    actionTimeout: 15000, // 15 second action timeout
   },
   projects: [
     // Authentication setup project - runs before authenticated tests

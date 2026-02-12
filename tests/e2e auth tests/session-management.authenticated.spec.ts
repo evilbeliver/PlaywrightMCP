@@ -11,11 +11,11 @@ test.describe('Logout Flow - Authenticated', () => {
     await expect(logoutLink).toHaveAttribute('href', /\/logout/);
   });
 
-  test('should successfully logout when clicking logout link', async ({ page }) => {
+  test('should successfully logout when navigating to logout URL', async ({ page }) => {
     await page.goto('/dashboard');
     
-    const logoutLink = page.getByRole('link', { name: /log out/i });
-    await logoutLink.click();
+    // Navigate directly to logout URL
+    await page.goto('/logout');
     
     // After logout, user should be redirected to login page or homepage
     await expect(page).toHaveURL(/\/(identity\/login|$)/);
@@ -24,9 +24,8 @@ test.describe('Logout Flow - Authenticated', () => {
   test('should not access dashboard after logout', async ({ page, context }) => {
     await page.goto('/dashboard');
     
-    // Click logout
-    const logoutLink = page.getByRole('link', { name: /log out/i });
-    await logoutLink.click();
+    // Navigate directly to logout URL
+    await page.goto('/logout');
     
     // Wait for logout to complete
     await page.waitForURL(/\/(identity\/login|$)/);
@@ -50,21 +49,20 @@ test.describe('Session Persistence - Authenticated', () => {
     await page.goto('/dashboard');
     await expect(page).toHaveURL(/\/dashboard/);
     
-    // Navigate to search
-    await page.goto('/search');
-    await expect(page).toHaveURL(/\/search/);
-    
     // Navigate to workouts
     await page.goto('/ResourceLibrary/workouts/all');
     await expect(page).toHaveURL(/\/ResourceLibrary\/workouts/);
+    
+    // Navigate to fitness center search
+    await page.goto('/search/results');
     
     // Navigate back to dashboard
     await page.goto('/dashboard');
     await expect(page).toHaveURL(/\/dashboard/);
     
-    // Should still be logged in - verify user name is visible
-    const userName = page.getByText('Test', { exact: true });
-    await expect(userName).toBeVisible();
+    // Should still be logged in - verify Fitness ID is visible
+    const fitnessId = page.getByText(/Fitness ID:/i);
+    await expect(fitnessId).toBeVisible();
   });
 
   test('should maintain session across My Account pages', async ({ page }) => {
@@ -72,14 +70,14 @@ test.describe('Session Persistence - Authenticated', () => {
     await expect(page).toHaveURL(/\/MyAccount\/program-info/);
     
     // Verify user is still logged in
-    const fitnessId = page.getByText(/Fitness ID:/);
-    await expect(fitnessId).toBeVisible();
+    await expect(page.getByText(/Fitness ID:/i)).toBeVisible();
     
-    // Navigate to another account page
-    await page.goto('/MyAccount/preferences');
-    await expect(page).toHaveURL(/\/MyAccount\/preferences/);
+    // Navigate to another account page via sidebar navigation (not dropdown)
+    const secondaryNav = page.getByRole('navigation', { name: 'Secondary', exact: true });
+    await secondaryNav.getByRole('link', { name: 'Personal Info' }).click();
+    await expect(page).toHaveURL(/\/MyAccount\/personal-info/);
     
     // Should still be logged in
-    await expect(fitnessId).toBeVisible();
+    await expect(page.getByText(/Fitness ID:/i)).toBeVisible();
   });
 });

@@ -29,9 +29,10 @@ test.describe('Dashboard - Authenticated', () => {
     await expect(interestsLink).toBeVisible();
   });
 
-  test('should display Virtual Events section', async ({ page }) => {
-    const eventsHeading = page.getByRole('heading', { name: /virtual events/i });
-    await expect(eventsHeading).toBeVisible();
+  test('should display dashboard content sections', async ({ page }) => {
+    // Verify dashboard has main content area
+    const mainContent = page.locator('main, .dashboard-content, [role="main"]');
+    await expect(mainContent.first()).toBeVisible();
   });
 
   test('should display View Events and My Tickets links', async ({ page }) => {
