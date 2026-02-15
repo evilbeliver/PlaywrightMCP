@@ -1,0 +1,653 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Broken Links Report - https://blog.silverandfit.com/</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background: #f5f5f5;
+      padding: 20px;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 30px;
+      border-radius: 10px;
+      margin-bottom: 30px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    h1 {
+      font-size: 2em;
+      margin-bottom: 10px;
+    }
+    .meta {
+      opacity: 0.9;
+      font-size: 0.9em;
+    }
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+    .stat-card {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    .stat-card h3 {
+      font-size: 2.5em;
+      margin-bottom: 5px;
+    }
+    .stat-card.total h3 { color: #667eea; }
+    .stat-card.broken h3 { color: #e74c3c; }
+    .stat-card.working h3 { color: #27ae60; }
+    .stat-card.redirected h3 { color: #f39c12; }
+    .stat-card p {
+      color: #666;
+      font-size: 0.9em;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    section {
+      background: white;
+      border-radius: 10px;
+      padding: 25px;
+      margin-bottom: 30px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    section h2 {
+      color: #333;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #eee;
+    }
+    section h2.broken { color: #e74c3c; border-bottom-color: #e74c3c; }
+    section h2.redirected { color: #f39c12; border-bottom-color: #f39c12; }
+    section h2.working { color: #27ae60; border-bottom-color: #27ae60; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #eee;
+    }
+    th {
+      background: #f8f9fa;
+      font-weight: 600;
+      color: #555;
+      text-transform: uppercase;
+      font-size: 0.8em;
+      letter-spacing: 0.5px;
+    }
+    tr:hover {
+      background: #f8f9fa;
+    }
+    .url {
+      max-width: 400px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .url a {
+      color: #667eea;
+      text-decoration: none;
+    }
+    .url a:hover {
+      text-decoration: underline;
+    }
+    .status {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 0.85em;
+      font-weight: 500;
+    }
+    .status.error { background: #fce4ec; color: #c62828; }
+    .status.redirect { background: #fff3e0; color: #ef6c00; }
+    .status.success { background: #e8f5e9; color: #2e7d32; }
+    .error-msg {
+      color: #e74c3c;
+      font-size: 0.85em;
+      max-width: 300px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .redirect-url {
+      color: #f39c12;
+      font-size: 0.85em;
+    }
+    .redirect-url a {
+      color: #f39c12;
+    }
+    .no-items {
+      text-align: center;
+      padding: 40px;
+      color: #999;
+    }
+    .arrow {
+      color: #999;
+      padding: 0 10px;
+    }
+    footer {
+      text-align: center;
+      color: #999;
+      font-size: 0.85em;
+      padding: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🔗 Broken Links Report</h1>
+      <p class="meta">Target URL: <strong>https://blog.silverandfit.com/</strong></p>
+      <p class="meta">Generated: 2/15/2026, 11:40:31 AM</p>
+    </header>
+
+    <div class="summary">
+      <div class="stat-card total">
+        <h3>54</h3>
+        <p>Total Links</p>
+      </div>
+      <div class="stat-card broken">
+        <h3>9</h3>
+        <p>Broken Links</p>
+      </div>
+      <div class="stat-card working">
+        <h3>45</h3>
+        <p>Working Links</p>
+      </div>
+      <div class="stat-card redirected">
+        <h3>3</h3>
+        <p>Redirected Links</p>
+      </div>
+    </div>
+
+    
+    <section>
+      <h2 class="broken">❌ Broken Links (9)</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>URL</th>
+            <th>Status</th>
+            <th>Error / Details</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+          <tr>
+            <td>1</td>
+            <td class="url"><a href="https://www.silverandfit.com/identity/login" target="_blank">https://www.silverandfit.com/identity/login</a></td>
+            <td><span class="status error">404</span></td>
+            <td class="error-msg" title="Not Found">Not Found</td>
+          </tr>
+          
+          <tr>
+            <td>2</td>
+            <td class="url"><a href="https://www.silverandfit.com/identity/registration" target="_blank">https://www.silverandfit.com/identity/registration</a></td>
+            <td><span class="status error">404</span></td>
+            <td class="error-msg" title="Not Found">Not Found</td>
+          </tr>
+          
+          <tr>
+            <td>3</td>
+            <td class="url"><a href="https://www.silverandfit.com/well-being-club" target="_blank">https://www.silverandfit.com/well-being-club</a></td>
+            <td><span class="status error">404</span></td>
+            <td class="error-msg" title="Not Found">Not Found</td>
+          </tr>
+          
+          <tr>
+            <td>4</td>
+            <td class="url"><a href="https://www.silverandfit.com/faq" target="_blank">https://www.silverandfit.com/faq</a></td>
+            <td><span class="status error">404</span></td>
+            <td class="error-msg" title="Not Found">Not Found</td>
+          </tr>
+          
+          <tr>
+            <td>5</td>
+            <td class="url"><a href="https://www.facebook.com/SilverandFit" target="_blank">https://www.facebook.com/SilverandFit</a></td>
+            <td><span class="status error">400</span></td>
+            <td class="error-msg" title="Bad Request">Bad Request</td>
+          </tr>
+          
+          <tr>
+            <td>6</td>
+            <td class="url"><a href="https://www.silverandfit.com/FAQ" target="_blank">https://www.silverandfit.com/FAQ</a></td>
+            <td><span class="status error">404</span></td>
+            <td class="error-msg" title="Not Found">Not Found</td>
+          </tr>
+          
+          <tr>
+            <td>7</td>
+            <td class="url"><a href="https://www.silverandfit.com/sitemap" target="_blank">https://www.silverandfit.com/sitemap</a></td>
+            <td><span class="status error">404</span></td>
+            <td class="error-msg" title="Not Found">Not Found</td>
+          </tr>
+          
+          <tr>
+            <td>8</td>
+            <td class="url"><a href="https://www.silverandfit.com/contactus" target="_blank">https://www.silverandfit.com/contactus</a></td>
+            <td><span class="status error">404</span></td>
+            <td class="error-msg" title="Not Found">Not Found</td>
+          </tr>
+          
+          <tr>
+            <td>9</td>
+            <td class="url"><a href="https://acrobat.adobe.com/us/en/acrobat/pdf-reader.html" target="_blank">https://acrobat.adobe.com/us/en/acrobat/pdf-reader.html</a></td>
+            <td><span class="status error">Error</span></td>
+            <td class="error-msg" title="apiRequestContext.get: Timeout 15000ms exceeded.
+Call log:
+[2m  - → GET https://acrobat.adobe.com/us/en/acrobat/pdf-reader.html[22m
+[2m    - user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.7632.6 Safari/537.36[22m
+[2m    - accept: */*[22m
+[2m    - accept-encoding: gzip,deflate,br[22m
+[2m  - ← 301 Moved Permanently[22m
+[2m    - content-length: 0[22m
+[2m    - location: https://www.adobe.com/acrobat/pdf-reader.html[22m
+[2m    - expires: Sun, 15 Feb 2026 16:40:16 GMT[22m
+[2m    - cache-control: max-age=0, no-cache, no-store[22m
+[2m    - pragma: no-cache[22m
+[2m    - server-timing: cdn-cache; desc=HIT, edge; dur=1, ak_p; desc=&quot;1771173616171_399425800_1723721703_13822_2811_0_20_-&quot;;dur=1[22m
+[2m    - date: Sun, 15 Feb 2026 16:40:16 GMT[22m
+[2m    - connection: keep-alive[22m
+[2m    - strict-transport-security: max-age=31536000; includeSubDomains[22m
+[2m    - access-control-max-age: 86400[22m
+[2m    - access-control-allow-credentials: false[22m
+[2m    - access-control-allow-headers: *[22m
+[2m    - access-control-allow-methods: GET,HEAD,OPTIONS[22m
+[2m    - access-control-allow-origin: *[22m
+[2m    - akamai-grn: 0.08c1ce17.1771173616.66bde7e7[22m
+[2m  - → GET https://www.adobe.com/acrobat/pdf-reader.html[22m
+[2m    - user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.7632.6 Safari/537.36[22m
+[2m    - accept: */*[22m
+[2m    - accept-encoding: gzip,deflate,br[22m
+">apiRequestContext.get: Timeout 15000ms exceeded.
+Call log:
+[2m  - → GET https://acrobat.adobe.com/us/en/acrobat/pdf-reader.html[22m
+[2m    - user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.7632.6 Safari/537.36[22m
+[2m    - accept: */*[22m
+[2m    - accept-encoding: gzip,deflate,br[22m
+[2m  - ← 301 Moved Permanently[22m
+[2m    - content-length: 0[22m
+[2m    - location: https://www.adobe.com/acrobat/pdf-reader.html[22m
+[2m    - expires: Sun, 15 Feb 2026 16:40:16 GMT[22m
+[2m    - cache-control: max-age=0, no-cache, no-store[22m
+[2m    - pragma: no-cache[22m
+[2m    - server-timing: cdn-cache; desc=HIT, edge; dur=1, ak_p; desc=&quot;1771173616171_399425800_1723721703_13822_2811_0_20_-&quot;;dur=1[22m
+[2m    - date: Sun, 15 Feb 2026 16:40:16 GMT[22m
+[2m    - connection: keep-alive[22m
+[2m    - strict-transport-security: max-age=31536000; includeSubDomains[22m
+[2m    - access-control-max-age: 86400[22m
+[2m    - access-control-allow-credentials: false[22m
+[2m    - access-control-allow-headers: *[22m
+[2m    - access-control-allow-methods: GET,HEAD,OPTIONS[22m
+[2m    - access-control-allow-origin: *[22m
+[2m    - akamai-grn: 0.08c1ce17.1771173616.66bde7e7[22m
+[2m  - → GET https://www.adobe.com/acrobat/pdf-reader.html[22m
+[2m    - user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.7632.6 Safari/537.36[22m
+[2m    - accept: */*[22m
+[2m    - accept-encoding: gzip,deflate,br[22m
+</td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </section>
+    
+
+    
+    <section>
+      <h2 class="redirected">↪️ Redirected Links (3)</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Original URL</th>
+            <th>Status</th>
+            <th>Redirected To</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+          <tr>
+            <td>1</td>
+            <td class="url"><a href="https://www.facebook.com/SilverandFit" target="_blank">https://www.facebook.com/SilverandFit</a></td>
+            <td><span class="status redirect">400 Bad Request</span></td>
+            <td class="redirect-url"><a href="https://www.facebook.com/login/?next=https%3A%2F%2Fwww.facebook.com%2FSilverandFit" target="_blank">https://www.facebook.com/login/?next=https%3A%2F%2Fwww.facebook.com%2FSilverandFit</a></td>
+          </tr>
+          
+          <tr>
+            <td>2</td>
+            <td class="url"><a href="https://twitter.com/silverandfit?lang=en" target="_blank">https://twitter.com/silverandfit?lang=en</a></td>
+            <td><span class="status redirect">200 OK</span></td>
+            <td class="redirect-url"><a href="https://x.com/silverandfit?lang=en" target="_blank">https://x.com/silverandfit?lang=en</a></td>
+          </tr>
+          
+          <tr>
+            <td>3</td>
+            <td class="url"><a href="https://pinterest.com/silverandfit" target="_blank">https://pinterest.com/silverandfit</a></td>
+            <td><span class="status redirect">200 OK</span></td>
+            <td class="redirect-url"><a href="https://www.pinterest.com/silverandfit/" target="_blank">https://www.pinterest.com/silverandfit/</a></td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </section>
+    
+
+    <section>
+      <h2 class="working">✅ All Working Links (45)</h2>
+      
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>URL</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+          <tr>
+            <td>1</td>
+            <td class="url"><a href="https://www.silverandfit.com/" target="_blank">https://www.silverandfit.com/</a></td>
+            <td><span class="status success">200 OK</span></td>
+          </tr>
+          
+          <tr>
+            <td>2</td>
+            <td class="url"><a href="https://www.silverandfit.com/search" target="_blank">https://www.silverandfit.com/search</a></td>
+            <td><span class="status success">200 OK</span></td>
+          </tr>
+          
+          <tr>
+            <td>3</td>
+            <td class="url"><a href="https://www.silverandfit.com/workouts" target="_blank">https://www.silverandfit.com/workouts</a></td>
+            <td><span class="status success">200 OK</span></td>
+          </tr>
+          
+          <tr>
+            <td>4</td>
+            <td class="url"><a href="https://www.silverandfit.com/home-kits" target="_blank">https://www.silverandfit.com/home-kits</a></td>
+            <td><span class="status success">200 OK</span></td>
+          </tr>
+          
+          <tr>
+            <td>5</td>
+            <td class="url"><a href="https://www.silverandfit.com/health-plans" target="_blank">https://www.silverandfit.com/health-plans</a></td>
+            <td><span class="status success">200 OK</span></td>
+          </tr>
+          
+          <tr>
+            <td>6</td>
+            <td class="url"><a href="https://www.silverandfit.com/how-it-works" target="_blank">https://www.silverandfit.com/how-it-works</a></td>
+            <td><span class="status success">200 OK</span></td>
+          </tr>
+          
+          <tr>
+            <td>7</td>
+            <td class="url"><a href="https://blog.silverandfit.com/" target="_blank">https://blog.silverandfit.com/</a></td>
+            <td><span class="status success">200 OK</span></td>
+          </tr>
+          
+          <tr>
+            <td>8</td>
+            <td class="url"><a href="https://blog.silverandfit.com/tag/fitness/longevity" target="_blank">https://blog.silverandfit.com/tag/fitness/longevity</a></td>
+            <td><span class="status success">200 OK</span></td>
+          </tr>
+          
+          <tr>
+            <td>9</td>
+            <td class="url"><a href="https://blog.silverandfit.com/tag/nutrition/canned-foods" target="_blank">https://blog.silverandfit.com/tag/nutrition/canned-foods</a></td>
+            <td><span class="status success">200 OK</span></td>
+          </tr>
+          
+          <tr>
+            <td>10</td>
+            <td class="url"><a href="https://blog.silverandfit.com/tag/lifestyle/habit" target="_blank">https://blog.silverandfit.com/tag/lifestyle/habit</a></td>
+            <td><span class="status success">200 OK</span></td>
+          </tr>
+          
+          <tr>
+            <td>11</td>
+            <td class="url"><a href="https://blog.silverandfit.com/tag/nutrition" target="_blank">https://blog.silverandfit.com/tag/nutrition</a></td>
+            <td><span class="status success">200 OK</span></td>
+          </tr>
+          
+          <tr>
+            <td>12</td>
+            <td class="url"><a href="https://blog.silverandfit.com/tag/fitness" target="_blank">https://blog.silverandfit.com/tag/fitness</a></td>
+            <td><span class="status success">200 OK</span></td>
+          </tr>
+          
+          <tr>
+            <td>13</td>
+            <td class="url"><a href="https://blog.silverandfit.com/tag/lifestyle" target="_blank">https://blog.silverandfit.com/tag/lifestyle</a></td>
+            <td><span class="status success">200 OK</span></td>
+          </tr>
+          
+          <tr>
+            <td>14</td>
+            <td class="url"><a href="https://blog.silverandfit.com/tag/healthy-aging" target="_blank">https://blog.silverandfit.com/tag/healthy-aging</a></td>
+            <td><span class="status success">200 OK</span></td>
+          </tr>
+          
+          <tr>
+            <td>15</td>
+            <td class="url"><a href="https://blog.silverandfit.com/tag/fitness/revamp-cardio" target="_blank">https://blog.silverandfit.com/tag/fitness/revamp-cardio</a></td>
+            <td><span class="status success">200 OK</span></td>
+          </tr>
+          
+          <tr>
+            <td>16</td>
+            <td class="url"><a href="https://blog.silverandfit.com/author/american-specialty-health" target="_blank">https://blog.silverandfit.com/author/american-specialty-health</a></td>
+            <td><span class="status success">200 OK</span></td>
+          </tr>
+          
+          <tr>
+            <td>17</td>
+            <td class="url"><a href="https://blog.silverandfit.com/tag/lifestyle/your-doctor" target="_blank">https://blog.silverandfit.com/tag/lifestyle/your-doctor</a></td>
+            <td><span class="status success">200 OK</span></td>
+          </tr>
+          
+          <tr>
+            <td>18</td>
+            <td class="url"><a href="https://blog.silverandfit.com/tag/healthy-aging/creative-spark" target="_blank">https://blog.silverandfit.com/tag/healthy-aging/creative-spark</a></td>
+            <td><span class="status success">200 OK</span></td>
+          </tr>
+          
+          <tr>
+            <td>19</td>
+            <td class="url"><a href="https://blog.silverandfit.com/tag/healthy-aging/diabetes" target="_blank">https://blog.silverandfit.com/tag/healthy-aging/diabetes</a></td>
+            <td><span class="status success">200 OK</span></td>
+          </tr>
+          
+          <tr>
+            <td>20</td>
+            <td class="url"><a href="https://blog.silverandfit.com/tag/lifestyle/gratitude" target="_blank">https://blog.silverandfit.com/tag/lifestyle/gratitude</a></td>
+            <td><span class="status success">200 OK</span></td>
+          </tr>
+          
+          <tr>
+            <td>21</td>
+            <td class="url"><a href="https://blog.silverandfit.com/tag/fitness/isometric-exercises" target="_blank">https://blog.silverandfit.com/tag/fitness/isometric-exercises</a></td>
+            <td><span class="status success">200 OK</span></td>
+          </tr>
+          
+          <tr>
+            <td>22</td>
+            <td class="url"><a href="https://blog.silverandfit.com/tag/nutrition/healthy-fats" target="_blank">https://blog.silverandfit.com/tag/nutrition/healthy-fats</a></td>
+            <td><span class="status success">200 OK</span></td>
+          </tr>
+          
+          <tr>
+            <td>23</td>
+            <td class="url"><a href="https://blog.silverandfit.com/tag/lifestyle/social-life" target="_blank">https://blog.silverandfit.com/tag/lifestyle/social-life</a></td>
+            <td><span class="status success">200 OK</span></td>
+          </tr>
+          
+          <tr>
+            <td>24</td>
+            <td class="url"><a href="https://blog.silverandfit.com/tag/fitness/hiit" target="_blank">https://blog.silverandfit.com/tag/fitness/hiit</a></td>
+            <td><span class="status success">200 OK</span></td>
+          </tr>
+          
+          <tr>
+            <td>25</td>
+            <td class="url"><a href="https://blog.silverandfit.com/tag/healthy-aging/hearing-loss" target="_blank">https://blog.silverandfit.com/tag/healthy-aging/hearing-loss</a></td>
+            <td><span class="status success">200 OK</span></td>
+          </tr>
+          
+          <tr>
+            <td>26</td>
+            <td class="url"><a href="https://blog.silverandfit.com/page/0" target="_blank">https://blog.silverandfit.com/page/0</a></td>
+            <td><span class="status success">200 OK</span></td>
+          </tr>
+          
+          <tr>
+            <td>27</td>
+            <td class="url"><a href="https://blog.silverandfit.com/page/1" target="_blank">https://blog.silverandfit.com/page/1</a></td>
+            <td><span class="status success">200 OK</span></td>
+          </tr>
+          
+          <tr>
+            <td>28</td>
+            <td class="url"><a href="https://blog.silverandfit.com/page/2" target="_blank">https://blog.silverandfit.com/page/2</a></td>
+            <td><span class="status success">200 OK</span></td>
+          </tr>
+          
+          <tr>
+            <td>29</td>
+            <td class="url"><a href="https://blog.silverandfit.com/page/3" target="_blank">https://blog.silverandfit.com/page/3</a></td>
+            <td><span class="status success">200 OK</span></td>
+          </tr>
+          
+          <tr>
+            <td>30</td>
+            <td class="url"><a href="https://blog.silverandfit.com/page/4" target="_blank">https://blog.silverandfit.com/page/4</a></td>
+            <td><span class="status success">200 OK</span></td>
+          </tr>
+          
+          <tr>
+            <td>31</td>
+            <td class="url"><a href="https://blog.silverandfit.com/page/5" target="_blank">https://blog.silverandfit.com/page/5</a></td>
+            <td><span class="status success">200 OK</span></td>
+          </tr>
+          
+          <tr>
+            <td>32</td>
+            <td class="url"><a href="https://blog.silverandfit.com/tag/nutrition/spinach" target="_blank">https://blog.silverandfit.com/tag/nutrition/spinach</a></td>
+            <td><span class="status success">200 OK</span></td>
+          </tr>
+          
+          <tr>
+            <td>33</td>
+            <td class="url"><a href="https://blog.silverandfit.com/tag/healthy-aging/fitness-food-myths" target="_blank">https://blog.silverandfit.com/tag/healthy-aging/fitness-food-myths</a></td>
+            <td><span class="status success">200 OK</span></td>
+          </tr>
+          
+          <tr>
+            <td>34</td>
+            <td class="url"><a href="https://blog.silverandfit.com/tag/healthy-aging/skin-care" target="_blank">https://blog.silverandfit.com/tag/healthy-aging/skin-care</a></td>
+            <td><span class="status success">200 OK</span></td>
+          </tr>
+          
+          <tr>
+            <td>35</td>
+            <td class="url"><a href="https://www.instagram.com/silverandfit/?hl=en" target="_blank">https://www.instagram.com/silverandfit/?hl=en</a></td>
+            <td><span class="status success">200 OK</span></td>
+          </tr>
+          
+          <tr>
+            <td>36</td>
+            <td class="url"><a href="https://twitter.com/silverandfit?lang=en" target="_blank">https://twitter.com/silverandfit?lang=en</a></td>
+            <td><span class="status success">200 OK</span></td>
+          </tr>
+          
+          <tr>
+            <td>37</td>
+            <td class="url"><a href="https://www.youtube.com/channel/UC8sFpm3hiJIb2rOxWQIaZgQ" target="_blank">https://www.youtube.com/channel/UC8sFpm3hiJIb2rOxWQIaZgQ</a></td>
+            <td><span class="status success">200 OK</span></td>
+          </tr>
+          
+          <tr>
+            <td>38</td>
+            <td class="url"><a href="https://cz.pinterest.com/silverandfit/_created/" target="_blank">https://cz.pinterest.com/silverandfit/_created/</a></td>
+            <td><span class="status success">200 OK</span></td>
+          </tr>
+          
+          <tr>
+            <td>39</td>
+            <td class="url"><a href="https://www.youtube.com/user/silverandfit" target="_blank">https://www.youtube.com/user/silverandfit</a></td>
+            <td><span class="status success">200 OK</span></td>
+          </tr>
+          
+          <tr>
+            <td>40</td>
+            <td class="url"><a href="https://pinterest.com/silverandfit" target="_blank">https://pinterest.com/silverandfit</a></td>
+            <td><span class="status success">200 OK</span></td>
+          </tr>
+          
+          <tr>
+            <td>41</td>
+            <td class="url"><a href="https://www.linkedin.com/company/american-specialty-health" target="_blank">https://www.linkedin.com/company/american-specialty-health</a></td>
+            <td><span class="status success">200 OK</span></td>
+          </tr>
+          
+          <tr>
+            <td>42</td>
+            <td class="url"><a href="https://www.silverandfit.com/About" target="_blank">https://www.silverandfit.com/About</a></td>
+            <td><span class="status success">200 OK</span></td>
+          </tr>
+          
+          <tr>
+            <td>43</td>
+            <td class="url"><a href="https://www.silverandfit.com/TermsAndConditions" target="_blank">https://www.silverandfit.com/TermsAndConditions</a></td>
+            <td><span class="status success">200 OK</span></td>
+          </tr>
+          
+          <tr>
+            <td>44</td>
+            <td class="url"><a href="https://www.silverandfit.com/Privacy" target="_blank">https://www.silverandfit.com/Privacy</a></td>
+            <td><span class="status success">200 OK</span></td>
+          </tr>
+          
+          <tr>
+            <td>45</td>
+            <td class="url"><a href="https://blog.silverandfit.com/hubfs/SF%20Linked%20Files/M950-1031A%20Language%20Support_tcm26-161058.pdf" target="_blank">https://blog.silverandfit.com/hubfs/SF%20Linked%20Files/M950-1031A%20Language%20Support_tcm26-161058.pdf</a></td>
+            <td><span class="status success">200 OK</span></td>
+          </tr>
+          
+        </tbody>
+      </table>
+      
+    </section>
+
+    <footer>
+      <p>Generated by Playwright Broken Link Checker</p>
+    </footer>
+  </div>
+</body>
+</html>

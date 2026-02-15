@@ -12,6 +12,8 @@ PlaywrightMCP/
 │   ├── BDD tests/
 │   │   ├── premium-fitness-enrollment-faq.spec.ts
 │   │   └── eligibility-check.spec.ts
+│   ├── broken link tests/
+│   │   └── broken-links.spec.ts         # Reference link checker
 │   ├── e2e/
 │   │   ├── complete-user-journeys.spec.ts
 │   │   ├── fitness-center-search.spec.ts
@@ -31,6 +33,7 @@ PlaywrightMCP/
 │       ├── homepage-navigation.spec.ts
 │       └── homepage-responsive.spec.ts
 ├── .auth/                               # Stored authentication state (gitignored)
+├── broken-link-reports/                 # Broken link checker HTML reports
 ├── playwright-report/                   # HTML test reports
 ├── test-results/                        # Test artifacts and traces
 ├── playwright.config.ts                 # Playwright configuration
@@ -170,6 +173,13 @@ Authenticated user journey tests:
 - My Account pages
 - Session management
 
+### Broken Link Tests
+Reference link validation for blog content:
+- Scans blog listing pages to discover articles
+- Extracts reference links from the "References" section of each article
+- Validates all external reference links (academic citations, sources)
+- Generates detailed HTML reports with broken, timeout, and working links
+
 ## ⚙️ Configuration Options
 
 Key settings in `playwright.config.ts`:
@@ -237,7 +247,65 @@ Example GitHub Actions workflow:
     SILVERANDFIT_PASSWORD: ${{ secrets.SILVERANDFIT_PASSWORD }}
 ```
 
-## 📄 License
+## � Broken Link Checker
+
+The broken link checker scans blog articles and validates reference links in the "References" section.
+
+### Basic Usage
+
+```bash
+# Run with default settings (5 listing pages = ~50 articles)
+npx playwright test "broken link tests"
+
+# Run against Silver&Fit blog
+TARGET_URL="https://blog.silverandfit.com/" npx playwright test "broken link tests"
+```
+
+### Configuration Options
+
+| Environment Variable | Default | Description |
+|---------------------|---------|-------------|
+| `TARGET_URL` | `https://blog.silverandfit.com/` | Blog URL to scan |
+| `MAX_PAGES` | `5` | Number of listing pages (each has ~10 articles). Set to `0` for unlimited. |
+| `LINK_TIMEOUT` | `10000` | Timeout per link check (milliseconds) |
+| `MAX_RETRIES` | `2` | Retry attempts for failed/timeout links |
+
+### Examples
+
+```bash
+# Scan 3 listing pages (~30 articles)
+TARGET_URL="https://blog.silverandfit.com/" MAX_PAGES=3 npx playwright test "broken link tests"
+
+# Scan all pages (unlimited) with longer timeout
+TARGET_URL="https://blog.silverandfit.com/" MAX_PAGES=0 LINK_TIMEOUT=15000 npx playwright test "broken link tests"
+
+# Run with verbose output
+TARGET_URL="https://blog.silverandfit.com/" MAX_PAGES=5 npx playwright test "broken link tests" --reporter=list
+```
+
+### How It Works
+
+1. **Phase 1: Discover Articles** - Scans listing pages and identifies blog article URLs
+2. **Phase 2: Extract References** - Visits each article and extracts links from the "References" section
+3. **Phase 3: Check Links** - Validates each unique reference link with retry logic
+
+### HTML Reports
+
+Reports are saved to `broken-link-reports/reference-links-report-[timestamp].html` and include:
+
+- ❌ **Broken Links** - Links returning 4xx/5xx status codes
+- ⏱️ **Timeout Links** - Links that didn't respond in time
+- 🔀 **Redirected Links** - Links that redirect to a different URL
+- 📖 **Articles Scanned** - List of all articles checked
+- ✅ **Working Links** - All successfully validated links
+
+### Notes
+
+- Some academic links (e.g., `doi.org`) may return 403 errors due to bot blocking
+- The test uses soft assertions, so it continues checking all links even when broken ones are found
+- Reports include which article each broken link was found in for easy remediation
+
+## �📄 License
 
 [Add your license here]
 
