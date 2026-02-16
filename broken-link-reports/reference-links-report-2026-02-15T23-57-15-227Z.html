@@ -1,0 +1,828 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reference Links Report - https://blog.silverandfit.com/tag/fitness/pilates-training</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background: #f5f5f5;
+      padding: 20px;
+    }
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 30px;
+      border-radius: 10px;
+      margin-bottom: 30px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    h1 {
+      font-size: 2em;
+      margin-bottom: 10px;
+    }
+    .meta {
+      opacity: 0.9;
+      font-size: 0.9em;
+    }
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+    .stat-card {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    .stat-card h3 {
+      font-size: 2.5em;
+      margin-bottom: 5px;
+    }
+    .stat-card.articles h3 { color: #9b59b6; }
+    .stat-card.total h3 { color: #667eea; }
+    .stat-card.broken h3 { color: #e74c3c; }
+    .stat-card.timeout h3 { color: #95a5a6; }
+    .stat-card.working h3 { color: #27ae60; }
+    .stat-card.redirected h3 { color: #f39c12; }
+    .stat-card p {
+      color: #666;
+      font-size: 0.9em;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    section {
+      background: white;
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    h2 {
+      color: #333;
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #eee;
+    }
+    h2.broken { border-color: #e74c3c; }
+    h2.timeout { border-color: #95a5a6; }
+    h2.redirected { border-color: #f39c12; }
+    h2.working { border-color: #27ae60; }
+    h2.articles { border-color: #9b59b6; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9em;
+    }
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #eee;
+    }
+    th {
+      background: #f8f9fa;
+      font-weight: 600;
+      color: #555;
+    }
+    tr:hover {
+      background: #f8f9fa;
+    }
+    .url {
+      word-break: break-all;
+      max-width: 400px;
+    }
+    .article-title {
+      max-width: 300px;
+      font-style: italic;
+      color: #666;
+    }
+    .status {
+      font-weight: 600;
+    }
+    .status.error { color: #e74c3c; }
+    .status.timeout { color: #95a5a6; }
+    .status.redirect { color: #f39c12; }
+    .status.ok { color: #27ae60; }
+    a {
+      color: #667eea;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    .empty-state {
+      text-align: center;
+      padding: 40px;
+      color: #888;
+    }
+    .collapsible {
+      cursor: pointer;
+    }
+    .collapsible:after {
+      content: ' ▼';
+      font-size: 0.8em;
+    }
+    .collapsed:after {
+      content: ' ▶';
+    }
+    .content {
+      display: block;
+    }
+    .content.hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>📚 Reference Links Report</h1>
+      <p class="meta">Target: https://blog.silverandfit.com/tag/fitness/pilates-training</p>
+      <p class="meta">Generated: 2/15/2026, 6:57:15 PM</p>
+      <p class="meta">Scope: References section in blog articles only</p>
+    </header>
+
+    <div class="summary">
+      <div class="stat-card articles">
+        <h3>8</h3>
+        <p>Articles w/ Refs</p>
+      </div>
+      <div class="stat-card total">
+        <h3>70</h3>
+        <p>Reference Links</p>
+      </div>
+      <div class="stat-card broken">
+        <h3>18</h3>
+        <p>Broken</p>
+      </div>
+      <div class="stat-card timeout">
+        <h3>0</h3>
+        <p>Timeouts</p>
+      </div>
+      <div class="stat-card redirected">
+        <h3>11</h3>
+        <p>Redirects</p>
+      </div>
+      <div class="stat-card working">
+        <h3>52</h3>
+        <p>Working</p>
+      </div>
+    </div>
+
+    
+    <section>
+      <h2 class="broken">❌ Broken Reference Links (18)</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Reference URL</th>
+            <th>Status</th>
+            <th>Article</th>
+            <th>Error</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+          <tr>
+            <td class="url"><a href="https://www.mayoclinichealthsystem.org/hometown-health/speaking-of-health/isometric-exercise-and-blood-pressure" target="_blank">https://www.mayoclinichealthsystem.org/hometown-health/speaking-of-health/isometric-exercise-and-blood-pressure</a></td>
+            <td class="status error">403</td>
+            <td class="article-title"><a href="https://blog.silverandfit.com/tag/fitness/isometric-exercises" target="_blank">Strength Train With Joint-Friendly Isometric Exercises</a></td>
+            <td>Forbidden</td>
+          </tr>
+          
+          <tr>
+            <td class="url"><a href="https://doi.org/10.1177/2377960821993515" target="_blank">https://doi.org/10.1177/2377960821993515</a></td>
+            <td class="status error">403</td>
+            <td class="article-title"><a href="https://blog.silverandfit.com/tag/fitness/isometric-exercises" target="_blank">Strength Train With Joint-Friendly Isometric Exercises</a></td>
+            <td>Forbidden</td>
+          </tr>
+          
+          <tr>
+            <td class="url"><a href="https://doi.org/10.1111/sms.13375" target="_blank">https://doi.org/10.1111/sms.13375</a></td>
+            <td class="status error">403</td>
+            <td class="article-title"><a href="https://blog.silverandfit.com/tag/fitness/isometric-exercises" target="_blank">Strength Train With Joint-Friendly Isometric Exercises</a></td>
+            <td>Forbidden</td>
+          </tr>
+          
+          <tr>
+            <td class="url"><a href="https://www.nia.nih.gov/health/topics/healthy-eating-nutrition-and-diet" target="_blank">https://www.nia.nih.gov/health/topics/healthy-eating-nutrition-and-diet</a></td>
+            <td class="status error">405</td>
+            <td class="article-title"><a href="https://blog.silverandfit.com/tag/healthy-aging/fitness-food-myths" target="_blank">8 Common Food and Fitness Myths That Can Hinder Your Health</a></td>
+            <td>Not Allowed</td>
+          </tr>
+          
+          <tr>
+            <td class="url"><a href="https://www.nia.nih.gov/health/how-much-should-i-eat-quantity-and-quality" target="_blank">https://www.nia.nih.gov/health/how-much-should-i-eat-quantity-and-quality</a></td>
+            <td class="status error">405</td>
+            <td class="article-title"><a href="https://blog.silverandfit.com/tag/healthy-aging/fitness-food-myths" target="_blank">8 Common Food and Fitness Myths That Can Hinder Your Health</a></td>
+            <td>Not Allowed</td>
+          </tr>
+          
+          <tr>
+            <td class="url"><a href="https://www.nia.nih.gov/health/publication/exercise-physical-activity/introduction" target="_blank">https://www.nia.nih.gov/health/publication/exercise-physical-activity/introduction</a></td>
+            <td class="status error">405</td>
+            <td class="article-title"><a href="https://blog.silverandfit.com/tag/healthy-aging/fitness-food-myths" target="_blank">8 Common Food and Fitness Myths That Can Hinder Your Health</a></td>
+            <td>Not Allowed</td>
+          </tr>
+          
+          <tr>
+            <td class="url"><a href="https://www.nia.nih.gov/health/how-older-adults-can-get-started-exercise" target="_blank">https://www.nia.nih.gov/health/how-older-adults-can-get-started-exercise</a></td>
+            <td class="status error">405</td>
+            <td class="article-title"><a href="https://blog.silverandfit.com/tag/healthy-aging/fitness-food-myths" target="_blank">8 Common Food and Fitness Myths That Can Hinder Your Health</a></td>
+            <td>Not Allowed</td>
+          </tr>
+          
+          <tr>
+            <td class="url"><a href="https://doi.org/10.3390/nu7075240" target="_blank">https://doi.org/10.3390/nu7075240</a></td>
+            <td class="status error">403</td>
+            <td class="article-title"><a href="https://blog.silverandfit.com/tag/nutrition/canned-foods" target="_blank">How to Choose and Use Healthy Canned Foods</a></td>
+            <td>Forbidden</td>
+          </tr>
+          
+          <tr>
+            <td class="url"><a href="https://www.mayoclinichealthsystem.org/hometown-health/speaking-of-health/5-tips-to-manage-stress" target="_blank">https://www.mayoclinichealthsystem.org/hometown-health/speaking-of-health/5-tips-to-manage-stress</a></td>
+            <td class="status error">403</td>
+            <td class="article-title"><a href="https://blog.silverandfit.com/tag/healthy-aging/skin-care" target="_blank">7 Practical Tips for Optimal Skin Care</a></td>
+            <td>Forbidden</td>
+          </tr>
+          
+          <tr>
+            <td class="url"><a href="https://doi.org/10.2217/mmt-2016-0022" target="_blank">https://doi.org/10.2217/mmt-2016-0022</a></td>
+            <td class="status error">403</td>
+            <td class="article-title"><a href="https://blog.silverandfit.com/tag/healthy-aging/skin-care" target="_blank">7 Practical Tips for Optimal Skin Care</a></td>
+            <td>Forbidden</td>
+          </tr>
+          
+          <tr>
+            <td class="url"><a href="https://www.nia.nih.gov/health/skin-care-and-aging" target="_blank">https://www.nia.nih.gov/health/skin-care-and-aging</a></td>
+            <td class="status error">405</td>
+            <td class="article-title"><a href="https://blog.silverandfit.com/tag/healthy-aging/skin-care" target="_blank">7 Practical Tips for Optimal Skin Care</a></td>
+            <td>Not Allowed</td>
+          </tr>
+          
+          <tr>
+            <td class="url"><a href="https://nationaleczema.org/blog/laundry-change/" target="_blank">https://nationaleczema.org/blog/laundry-change/</a></td>
+            <td class="status error">404</td>
+            <td class="article-title"><a href="https://blog.silverandfit.com/tag/healthy-aging/skin-care" target="_blank">7 Practical Tips for Optimal Skin Care</a></td>
+            <td>Not Found</td>
+          </tr>
+          
+          <tr>
+            <td class="url"><a href="https://doi.org/10.3109/07853890.2016.1145795" target="_blank">https://doi.org/10.3109/07853890.2016.1145795</a></td>
+            <td class="status error">403</td>
+            <td class="article-title"><a href="https://blog.silverandfit.com/tag/healthy-aging/skin-care" target="_blank">7 Practical Tips for Optimal Skin Care</a></td>
+            <td>Forbidden</td>
+          </tr>
+          
+          <tr>
+            <td class="url"><a href="https://doi.org/10.1111/cod.13807" target="_blank">https://doi.org/10.1111/cod.13807</a></td>
+            <td class="status error">403</td>
+            <td class="article-title"><a href="https://blog.silverandfit.com/tag/healthy-aging/skin-care" target="_blank">7 Practical Tips for Optimal Skin Care</a></td>
+            <td>Forbidden</td>
+          </tr>
+          
+          <tr>
+            <td class="url"><a href="https://www.mayoclinichealthsystem.org/wellness/journey/february24" target="_blank">https://www.mayoclinichealthsystem.org/wellness/journey/february24</a></td>
+            <td class="status error">403</td>
+            <td class="article-title"><a href="https://blog.silverandfit.com/tag/fitness/revamp-cardio" target="_blank">Revamp Your Cardio: No Running Required</a></td>
+            <td>Forbidden</td>
+          </tr>
+          
+          <tr>
+            <td class="url"><a href="https://www.nia.nih.gov/health/medical-care-and-appointments/what-do-i-need-tell-doctor" target="_blank">https://www.nia.nih.gov/health/medical-care-and-appointments/what-do-i-need-tell-doctor</a></td>
+            <td class="status error">405</td>
+            <td class="article-title"><a href="https://blog.silverandfit.com/tag/lifestyle/your-doctor" target="_blank">How to Build a Strong Relationship With Your Doctor</a></td>
+            <td>Not Allowed</td>
+          </tr>
+          
+          <tr>
+            <td class="url"><a href="https://doi.org/10.1080/07421656.2016.1166832" target="_blank">https://doi.org/10.1080/07421656.2016.1166832</a></td>
+            <td class="status error">403</td>
+            <td class="article-title"><a href="https://blog.silverandfit.com/tag/healthy-aging/creative-spark" target="_blank">Reignite Your Creative Spark for Better Health</a></td>
+            <td>Forbidden</td>
+          </tr>
+          
+          <tr>
+            <td class="url"><a href="https://doi.org/10.1111/nyas.13996" target="_blank">https://doi.org/10.1111/nyas.13996</a></td>
+            <td class="status error">403</td>
+            <td class="article-title"><a href="https://blog.silverandfit.com/tag/healthy-aging/creative-spark" target="_blank">Reignite Your Creative Spark for Better Health</a></td>
+            <td>Forbidden</td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </section>
+    
+
+    
+
+    
+    <section>
+      <h2 class="redirected collapsible" onclick="toggleSection(this)">🔀 Redirected Links (11)</h2>
+      <div class="content">
+        <table>
+          <thead>
+            <tr>
+              <th>Original URL</th>
+              <th>Redirected To</th>
+              <th>Article</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+            <tr>
+              <td class="url"><a href="https://www.acefitness.org/education-and-resources/professional/expert-articles/6387/10-reasons-why-you-should-be-stretching" target="_blank">https://www.acefitness.org/education-and-resources/professional/expert-articles/6387/10-reasons-why-you-should-be-stretching</a></td>
+              <td class="url"><a href="https://www.acefitness.org/resources/pros/expert-articles/6387/10-reasons-why-you-should-be-stretching/" target="_blank">https://www.acefitness.org/resources/pros/expert-articles/6387/10-reasons-why-you-should-be-stretching/</a></td>
+              <td class="article-title"><a href="https://blog.silverandfit.com/tag/healthy-aging/safe-stretching" target="_blank">Incorporate Safe Stretching to Move More Freely as You Age</a></td>
+            </tr>
+            
+            <tr>
+              <td class="url"><a href="https://doi.org/10.1007/s40279-015-0376-x" target="_blank">https://doi.org/10.1007/s40279-015-0376-x</a></td>
+              <td class="url"><a href="https://link.springer.com/article/10.1007/s40279-015-0376-x" target="_blank">https://link.springer.com/article/10.1007/s40279-015-0376-x</a></td>
+              <td class="article-title"><a href="https://blog.silverandfit.com/tag/healthy-aging/safe-stretching" target="_blank">Incorporate Safe Stretching to Move More Freely as You Age</a></td>
+            </tr>
+            
+            <tr>
+              <td class="url"><a href="https://doi.org/10.1016/j.mayocp.2013.10.030" target="_blank">https://doi.org/10.1016/j.mayocp.2013.10.030</a></td>
+              <td class="url"><a href="https://linkinghub.elsevier.com/retrieve/pii/S0025619613010069" target="_blank">https://linkinghub.elsevier.com/retrieve/pii/S0025619613010069</a></td>
+              <td class="article-title"><a href="https://blog.silverandfit.com/tag/fitness/isometric-exercises" target="_blank">Strength Train With Joint-Friendly Isometric Exercises</a></td>
+            </tr>
+            
+            <tr>
+              <td class="url"><a href="https://doi.org/10.1016/j.cger.2010.08.001" target="_blank">https://doi.org/10.1016/j.cger.2010.08.001</a></td>
+              <td class="url"><a href="https://linkinghub.elsevier.com/retrieve/pii/S0749069010000753" target="_blank">https://linkinghub.elsevier.com/retrieve/pii/S0749069010000753</a></td>
+              <td class="article-title"><a href="https://blog.silverandfit.com/tag/healthy-aging/fitness-food-myths" target="_blank">8 Common Food and Fitness Myths That Can Hinder Your Health</a></td>
+            </tr>
+            
+            <tr>
+              <td class="url"><a href="https://ncoa.org/article/the-life-changing-benefits-of-exercise-after-60" target="_blank">https://ncoa.org/article/the-life-changing-benefits-of-exercise-after-60</a></td>
+              <td class="url"><a href="https://www.ncoa.org/article/the-life-changing-benefits-of-exercise-after-60/" target="_blank">https://www.ncoa.org/article/the-life-changing-benefits-of-exercise-after-60/</a></td>
+              <td class="article-title"><a href="https://blog.silverandfit.com/tag/healthy-aging/fitness-food-myths" target="_blank">8 Common Food and Fitness Myths That Can Hinder Your Health</a></td>
+            </tr>
+            
+            <tr>
+              <td class="url"><a href="https://www.worldhealth.net/news/busting-some-myths-about-exercise-benefits-seniors/" target="_blank">https://www.worldhealth.net/news/busting-some-myths-about-exercise-benefits-seniors/</a></td>
+              <td class="url"><a href="https://worldhealth.net/news/busting-some-myths-about-exercise-benefits-seniors/" target="_blank">https://worldhealth.net/news/busting-some-myths-about-exercise-benefits-seniors/</a></td>
+              <td class="article-title"><a href="https://blog.silverandfit.com/tag/healthy-aging/fitness-food-myths" target="_blank">8 Common Food and Fitness Myths That Can Hinder Your Health</a></td>
+            </tr>
+            
+            <tr>
+              <td class="url"><a href="https://hawaiifoodbank.org/blog/2023/02/28/canned-food-myths/" target="_blank">https://hawaiifoodbank.org/blog/2023/02/28/canned-food-myths/</a></td>
+              <td class="url"><a href="https://hawaiifoodbank.org/hunger-blog/canned-food-myths/" target="_blank">https://hawaiifoodbank.org/hunger-blog/canned-food-myths/</a></td>
+              <td class="article-title"><a href="https://blog.silverandfit.com/tag/nutrition/canned-foods" target="_blank">How to Choose and Use Healthy Canned Foods</a></td>
+            </tr>
+            
+            <tr>
+              <td class="url"><a href="https://doi.org/10.1186/1471-2458-14-873" target="_blank">https://doi.org/10.1186/1471-2458-14-873</a></td>
+              <td class="url"><a href="https://link.springer.com/article/10.1186/1471-2458-14-873" target="_blank">https://link.springer.com/article/10.1186/1471-2458-14-873</a></td>
+              <td class="article-title"><a href="https://blog.silverandfit.com/tag/fitness/revamp-cardio" target="_blank">Revamp Your Cardio: No Running Required</a></td>
+            </tr>
+            
+            <tr>
+              <td class="url"><a href="https://utswmed.org/medblog/heart-cardio-workouts" target="_blank">https://utswmed.org/medblog/heart-cardio-workouts</a></td>
+              <td class="url"><a href="https://utswmed.org/medblog/heart-cardio-workouts/" target="_blank">https://utswmed.org/medblog/heart-cardio-workouts/</a></td>
+              <td class="article-title"><a href="https://blog.silverandfit.com/tag/fitness/revamp-cardio" target="_blank">Revamp Your Cardio: No Running Required</a></td>
+            </tr>
+            
+            <tr>
+              <td class="url"><a href="https://doi.org/10.1186/s12889-025-22552-3" target="_blank">https://doi.org/10.1186/s12889-025-22552-3</a></td>
+              <td class="url"><a href="https://link.springer.com/article/10.1186/s12889-025-22552-3" target="_blank">https://link.springer.com/article/10.1186/s12889-025-22552-3</a></td>
+              <td class="article-title"><a href="https://blog.silverandfit.com/tag/healthy-aging/creative-spark" target="_blank">Reignite Your Creative Spark for Better Health</a></td>
+            </tr>
+            
+            <tr>
+              <td class="url"><a href="https://doi.org/10.4236/jss.2022.1012020" target="_blank">https://doi.org/10.4236/jss.2022.1012020</a></td>
+              <td class="url"><a href="https://www.scirp.org/journal/paperinformation?paperid=121169" target="_blank">https://www.scirp.org/journal/paperinformation?paperid=121169</a></td>
+              <td class="article-title"><a href="https://blog.silverandfit.com/tag/healthy-aging/creative-spark" target="_blank">Reignite Your Creative Spark for Better Health</a></td>
+            </tr>
+            
+          </tbody>
+        </table>
+      </div>
+    </section>
+    
+
+    <section>
+      <h2 class="articles collapsible" onclick="toggleSection(this)">📖 Articles Scanned (8 with references)</h2>
+      <div class="content">
+        <table>
+          <thead>
+            <tr>
+              <th>Article Title</th>
+              <th>URL</th>
+              <th>References</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+            <tr>
+              <td>Incorporate Safe Stretching to Move More Freely as You Age</td>
+              <td class="url"><a href="https://blog.silverandfit.com/tag/healthy-aging/safe-stretching" target="_blank">https://blog.silverandfit.com/tag/healthy-aging/safe-stretching</a></td>
+              <td>4</td>
+            </tr>
+            
+            <tr>
+              <td>Strength Train With Joint-Friendly Isometric Exercises</td>
+              <td class="url"><a href="https://blog.silverandfit.com/tag/fitness/isometric-exercises" target="_blank">https://blog.silverandfit.com/tag/fitness/isometric-exercises</a></td>
+              <td>8</td>
+            </tr>
+            
+            <tr>
+              <td>8 Common Food and Fitness Myths That Can Hinder Your Health</td>
+              <td class="url"><a href="https://blog.silverandfit.com/tag/healthy-aging/fitness-food-myths" target="_blank">https://blog.silverandfit.com/tag/healthy-aging/fitness-food-myths</a></td>
+              <td>9</td>
+            </tr>
+            
+            <tr>
+              <td>How to Choose and Use Healthy Canned Foods</td>
+              <td class="url"><a href="https://blog.silverandfit.com/tag/nutrition/canned-foods" target="_blank">https://blog.silverandfit.com/tag/nutrition/canned-foods</a></td>
+              <td>8</td>
+            </tr>
+            
+            <tr>
+              <td>7 Practical Tips for Optimal Skin Care</td>
+              <td class="url"><a href="https://blog.silverandfit.com/tag/healthy-aging/skin-care" target="_blank">https://blog.silverandfit.com/tag/healthy-aging/skin-care</a></td>
+              <td>16</td>
+            </tr>
+            
+            <tr>
+              <td>Revamp Your Cardio: No Running Required</td>
+              <td class="url"><a href="https://blog.silverandfit.com/tag/fitness/revamp-cardio" target="_blank">https://blog.silverandfit.com/tag/fitness/revamp-cardio</a></td>
+              <td>12</td>
+            </tr>
+            
+            <tr>
+              <td>How to Build a Strong Relationship With Your Doctor</td>
+              <td class="url"><a href="https://blog.silverandfit.com/tag/lifestyle/your-doctor" target="_blank">https://blog.silverandfit.com/tag/lifestyle/your-doctor</a></td>
+              <td>4</td>
+            </tr>
+            
+            <tr>
+              <td>Reignite Your Creative Spark for Better Health</td>
+              <td class="url"><a href="https://blog.silverandfit.com/tag/healthy-aging/creative-spark" target="_blank">https://blog.silverandfit.com/tag/healthy-aging/creative-spark</a></td>
+              <td>9</td>
+            </tr>
+            
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    
+    <section>
+      <h2 class="working collapsible collapsed" onclick="toggleSection(this)">✅ Working Links (52)</h2>
+      <div class="content hidden">
+        <table>
+          <thead>
+            <tr>
+              <th>Reference URL</th>
+              <th>Status</th>
+              <th>Article</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+            <tr>
+              <td class="url"><a href="https://www.heart.org/en/healthy-living/fitness/fitness-basics/flexibility-exercise-stretching" target="_blank">https://www.heart.org/en/healthy-living/fitness/fitness-basics/flexibility-exercise-stretching</a></td>
+              <td class="status ok">200</td>
+              <td class="article-title"><a href="https://blog.silverandfit.com/tag/healthy-aging/safe-stretching" target="_blank">Incorporate Safe Stretching to Move More Freely as You Age</a></td>
+            </tr>
+            
+            <tr>
+              <td class="url"><a href="https://www.acefitness.org/education-and-resources/professional/expert-articles/6387/10-reasons-why-you-should-be-stretching" target="_blank">https://www.acefitness.org/education-and-resources/professional/expert-articles/6387/10-reasons-why-you-should-be-stretching</a></td>
+              <td class="status ok">200</td>
+              <td class="article-title"><a href="https://blog.silverandfit.com/tag/healthy-aging/safe-stretching" target="_blank">Incorporate Safe Stretching to Move More Freely as You Age</a></td>
+            </tr>
+            
+            <tr>
+              <td class="url"><a href="https://www.mayoclinic.org/healthy-lifestyle/fitness/in-depth/stretching/art-20047931" target="_blank">https://www.mayoclinic.org/healthy-lifestyle/fitness/in-depth/stretching/art-20047931</a></td>
+              <td class="status ok">200</td>
+              <td class="article-title"><a href="https://blog.silverandfit.com/tag/healthy-aging/safe-stretching" target="_blank">Incorporate Safe Stretching to Move More Freely as You Age</a></td>
+            </tr>
+            
+            <tr>
+              <td class="url"><a href="https://doi.org/10.1007/s40279-015-0376-x" target="_blank">https://doi.org/10.1007/s40279-015-0376-x</a></td>
+              <td class="status ok">200</td>
+              <td class="article-title"><a href="https://blog.silverandfit.com/tag/healthy-aging/safe-stretching" target="_blank">Incorporate Safe Stretching to Move More Freely as You Age</a></td>
+            </tr>
+            
+            <tr>
+              <td class="url"><a href="https://doi.org/10.1016/j.mayocp.2013.10.030" target="_blank">https://doi.org/10.1016/j.mayocp.2013.10.030</a></td>
+              <td class="status ok">200</td>
+              <td class="article-title"><a href="https://blog.silverandfit.com/tag/fitness/isometric-exercises" target="_blank">Strength Train With Joint-Friendly Isometric Exercises</a></td>
+            </tr>
+            
+            <tr>
+              <td class="url"><a href="https://health.clevelandclinic.org/wall-sits" target="_blank">https://health.clevelandclinic.org/wall-sits</a></td>
+              <td class="status ok">200</td>
+              <td class="article-title"><a href="https://blog.silverandfit.com/tag/fitness/isometric-exercises" target="_blank">Strength Train With Joint-Friendly Isometric Exercises</a></td>
+            </tr>
+            
+            <tr>
+              <td class="url"><a href="https://health.clevelandclinic.org/what-is-isometric-exercise" target="_blank">https://health.clevelandclinic.org/what-is-isometric-exercise</a></td>
+              <td class="status ok">200</td>
+              <td class="article-title"><a href="https://blog.silverandfit.com/tag/fitness/isometric-exercises" target="_blank">Strength Train With Joint-Friendly Isometric Exercises</a></td>
+            </tr>
+            
+            <tr>
+              <td class="url"><a href="https://www.health.harvard.edu/topics/exercise-and-fitness" target="_blank">https://www.health.harvard.edu/topics/exercise-and-fitness</a></td>
+              <td class="status ok">200</td>
+              <td class="article-title"><a href="https://blog.silverandfit.com/tag/fitness/isometric-exercises" target="_blank">Strength Train With Joint-Friendly Isometric Exercises</a></td>
+            </tr>
+            
+            <tr>
+              <td class="url"><a href="https://www.mayoclinic.org/healthy-lifestyle/fitness/expert-answers/isometric-exercises/faq-20058186" target="_blank">https://www.mayoclinic.org/healthy-lifestyle/fitness/expert-answers/isometric-exercises/faq-20058186</a></td>
+              <td class="status ok">200</td>
+              <td class="article-title"><a href="https://blog.silverandfit.com/tag/fitness/isometric-exercises" target="_blank">Strength Train With Joint-Friendly Isometric Exercises</a></td>
+            </tr>
+            
+            <tr>
+              <td class="url"><a href="https://www.hospitalhealth.com.au/content/aged-allied-health/article/top-10-myths-regarding-nutrition-for-seniors-467328162" target="_blank">https://www.hospitalhealth.com.au/content/aged-allied-health/article/top-10-myths-regarding-nutrition-for-seniors-467328162</a></td>
+              <td class="status ok">200</td>
+              <td class="article-title"><a href="https://blog.silverandfit.com/tag/healthy-aging/fitness-food-myths" target="_blank">8 Common Food and Fitness Myths That Can Hinder Your Health</a></td>
+            </tr>
+            
+            <tr>
+              <td class="url"><a href="https://doi.org/10.1016/j.cger.2010.08.001" target="_blank">https://doi.org/10.1016/j.cger.2010.08.001</a></td>
+              <td class="status ok">200</td>
+              <td class="article-title"><a href="https://blog.silverandfit.com/tag/healthy-aging/fitness-food-myths" target="_blank">8 Common Food and Fitness Myths That Can Hinder Your Health</a></td>
+            </tr>
+            
+            <tr>
+              <td class="url"><a href="https://ncoa.org/article/the-life-changing-benefits-of-exercise-after-60" target="_blank">https://ncoa.org/article/the-life-changing-benefits-of-exercise-after-60</a></td>
+              <td class="status ok">200</td>
+              <td class="article-title"><a href="https://blog.silverandfit.com/tag/healthy-aging/fitness-food-myths" target="_blank">8 Common Food and Fitness Myths That Can Hinder Your Health</a></td>
+            </tr>
+            
+            <tr>
+              <td class="url"><a href="https://gero.usc.edu/2022/02/03/nutrition-and-aging-myths-and-misconceptions/" target="_blank">https://gero.usc.edu/2022/02/03/nutrition-and-aging-myths-and-misconceptions/</a></td>
+              <td class="status ok">200</td>
+              <td class="article-title"><a href="https://blog.silverandfit.com/tag/healthy-aging/fitness-food-myths" target="_blank">8 Common Food and Fitness Myths That Can Hinder Your Health</a></td>
+            </tr>
+            
+            <tr>
+              <td class="url"><a href="https://www.worldhealth.net/news/busting-some-myths-about-exercise-benefits-seniors/" target="_blank">https://www.worldhealth.net/news/busting-some-myths-about-exercise-benefits-seniors/</a></td>
+              <td class="status ok">200</td>
+              <td class="article-title"><a href="https://blog.silverandfit.com/tag/healthy-aging/fitness-food-myths" target="_blank">8 Common Food and Fitness Myths That Can Hinder Your Health</a></td>
+            </tr>
+            
+            <tr>
+              <td class="url"><a href="https://www.eatright.org/food/planning/smart-shopping/are-canned-foods-nutritious-for-my-family" target="_blank">https://www.eatright.org/food/planning/smart-shopping/are-canned-foods-nutritious-for-my-family</a></td>
+              <td class="status ok">200</td>
+              <td class="article-title"><a href="https://blog.silverandfit.com/tag/nutrition/canned-foods" target="_blank">How to Choose and Use Healthy Canned Foods</a></td>
+            </tr>
+            
+            <tr>
+              <td class="url"><a href="https://hawaiifoodbank.org/blog/2023/02/28/canned-food-myths/" target="_blank">https://hawaiifoodbank.org/blog/2023/02/28/canned-food-myths/</a></td>
+              <td class="status ok">200</td>
+              <td class="article-title"><a href="https://blog.silverandfit.com/tag/nutrition/canned-foods" target="_blank">How to Choose and Use Healthy Canned Foods</a></td>
+            </tr>
+            
+            <tr>
+              <td class="url"><a href="https://extension.umaine.edu/food-health/2022/12/08/canned-foods-can-be-healthy/" target="_blank">https://extension.umaine.edu/food-health/2022/12/08/canned-foods-can-be-healthy/</a></td>
+              <td class="status ok">200</td>
+              <td class="article-title"><a href="https://blog.silverandfit.com/tag/nutrition/canned-foods" target="_blank">How to Choose and Use Healthy Canned Foods</a></td>
+            </tr>
+            
+            <tr>
+              <td class="url"><a href="https://extension.illinois.edu/news-releases/cracking-open-canned-food-myths" target="_blank">https://extension.illinois.edu/news-releases/cracking-open-canned-food-myths</a></td>
+              <td class="status ok">200</td>
+              <td class="article-title"><a href="https://blog.silverandfit.com/tag/nutrition/canned-foods" target="_blank">How to Choose and Use Healthy Canned Foods</a></td>
+            </tr>
+            
+            <tr>
+              <td class="url"><a href="https://www.fda.gov/food/food-packaging-other-substances-come-contact-food-information-consumers/bisphenol-bpa-use-food-contact-application" target="_blank">https://www.fda.gov/food/food-packaging-other-substances-come-contact-food-information-consumers/bisphenol-bpa-use-food-contact-application</a></td>
+              <td class="status ok">200</td>
+              <td class="article-title"><a href="https://blog.silverandfit.com/tag/nutrition/canned-foods" target="_blank">How to Choose and Use Healthy Canned Foods</a></td>
+            </tr>
+            
+            <tr>
+              <td class="url"><a href="https://www.fda.gov/food/food-additives-and-gras-ingredients-information-consumers/types-food-ingredients" target="_blank">https://www.fda.gov/food/food-additives-and-gras-ingredients-information-consumers/types-food-ingredients</a></td>
+              <td class="status ok">200</td>
+              <td class="article-title"><a href="https://blog.silverandfit.com/tag/nutrition/canned-foods" target="_blank">How to Choose and Use Healthy Canned Foods</a></td>
+            </tr>
+            
+            <tr>
+              <td class="url"><a href="https://www.va.gov/illiana-health-care/stories/healthy-and-low-cost-eating-using-canned-and-dry-foods/" target="_blank">https://www.va.gov/illiana-health-care/stories/healthy-and-low-cost-eating-using-canned-and-dry-foods/</a></td>
+              <td class="status ok">200</td>
+              <td class="article-title"><a href="https://blog.silverandfit.com/tag/nutrition/canned-foods" target="_blank">How to Choose and Use Healthy Canned Foods</a></td>
+            </tr>
+            
+            <tr>
+              <td class="url"><a href="https://www.aad.org/public/everyday-care/skin-care-secrets/routine/healthier-looking-skin" target="_blank">https://www.aad.org/public/everyday-care/skin-care-secrets/routine/healthier-looking-skin</a></td>
+              <td class="status ok">200</td>
+              <td class="article-title"><a href="https://blog.silverandfit.com/tag/healthy-aging/skin-care" target="_blank">7 Practical Tips for Optimal Skin Care</a></td>
+            </tr>
+            
+            <tr>
+              <td class="url"><a href="https://www.aad.org/public/everyday-care/skin-care-basics/care/face-washing-101" target="_blank">https://www.aad.org/public/everyday-care/skin-care-basics/care/face-washing-101</a></td>
+              <td class="status ok">200</td>
+              <td class="article-title"><a href="https://blog.silverandfit.com/tag/healthy-aging/skin-care" target="_blank">7 Practical Tips for Optimal Skin Care</a></td>
+            </tr>
+            
+            <tr>
+              <td class="url"><a href="https://www.aad.org/media/stats-sunscreen" target="_blank">https://www.aad.org/media/stats-sunscreen</a></td>
+              <td class="status ok">200</td>
+              <td class="article-title"><a href="https://blog.silverandfit.com/tag/healthy-aging/skin-care" target="_blank">7 Practical Tips for Optimal Skin Care</a></td>
+            </tr>
+            
+            <tr>
+              <td class="url"><a href="https://www.aad.org/public/diseases/skin-cancer/find/at-risk/abcdes" target="_blank">https://www.aad.org/public/diseases/skin-cancer/find/at-risk/abcdes</a></td>
+              <td class="status ok">200</td>
+              <td class="article-title"><a href="https://blog.silverandfit.com/tag/healthy-aging/skin-care" target="_blank">7 Practical Tips for Optimal Skin Care</a></td>
+            </tr>
+            
+            <tr>
+              <td class="url"><a href="https://www.mayoclinic.org/diseases-conditions/skin-cancer/symptoms-causes/syc-20377605" target="_blank">https://www.mayoclinic.org/diseases-conditions/skin-cancer/symptoms-causes/syc-20377605</a></td>
+              <td class="status ok">200</td>
+              <td class="article-title"><a href="https://blog.silverandfit.com/tag/healthy-aging/skin-care" target="_blank">7 Practical Tips for Optimal Skin Care</a></td>
+            </tr>
+            
+            <tr>
+              <td class="url"><a href="https://www.mayoclinic.org/healthy-lifestyle/adult-health/in-depth/skin-care/art-20048237?reDate=14092023" target="_blank">https://www.mayoclinic.org/healthy-lifestyle/adult-health/in-depth/skin-care/art-20048237?reDate=14092023</a></td>
+              <td class="status ok">200</td>
+              <td class="article-title"><a href="https://blog.silverandfit.com/tag/healthy-aging/skin-care" target="_blank">7 Practical Tips for Optimal Skin Care</a></td>
+            </tr>
+            
+            <tr>
+              <td class="url"><a href="https://www.mayoclinic.org/tests-procedures/stress-management/about/pac-20384898" target="_blank">https://www.mayoclinic.org/tests-procedures/stress-management/about/pac-20384898</a></td>
+              <td class="status ok">200</td>
+              <td class="article-title"><a href="https://blog.silverandfit.com/tag/healthy-aging/skin-care" target="_blank">7 Practical Tips for Optimal Skin Care</a></td>
+            </tr>
+            
+            <tr>
+              <td class="url"><a href="https://medlineplus.gov/ency/article/004014.htm" target="_blank">https://medlineplus.gov/ency/article/004014.htm</a></td>
+              <td class="status ok">200</td>
+              <td class="article-title"><a href="https://blog.silverandfit.com/tag/healthy-aging/skin-care" target="_blank">7 Practical Tips for Optimal Skin Care</a></td>
+            </tr>
+            
+            <tr>
+              <td class="url"><a href="https://medlineplus.gov/ency/imagepages/8912.htm" target="_blank">https://medlineplus.gov/ency/imagepages/8912.htm</a></td>
+              <td class="status ok">200</td>
+              <td class="article-title"><a href="https://blog.silverandfit.com/tag/healthy-aging/skin-care" target="_blank">7 Practical Tips for Optimal Skin Care</a></td>
+            </tr>
+            
+            <tr>
+              <td class="url"><a href="https://www.ncbi.nlm.nih.gov/books/NBK279255/" target="_blank">https://www.ncbi.nlm.nih.gov/books/NBK279255/</a></td>
+              <td class="status ok">200</td>
+              <td class="article-title"><a href="https://blog.silverandfit.com/tag/healthy-aging/skin-care" target="_blank">7 Practical Tips for Optimal Skin Care</a></td>
+            </tr>
+            
+            <tr>
+              <td class="url"><a href="https://doi.org/10.1186/1471-2458-14-873" target="_blank">https://doi.org/10.1186/1471-2458-14-873</a></td>
+              <td class="status ok">200</td>
+              <td class="article-title"><a href="https://blog.silverandfit.com/tag/fitness/revamp-cardio" target="_blank">Revamp Your Cardio: No Running Required</a></td>
+            </tr>
+            
+            <tr>
+              <td class="url"><a href="https://my.clevelandclinic.org/health/articles/7050-aerobic-exercise" target="_blank">https://my.clevelandclinic.org/health/articles/7050-aerobic-exercise</a></td>
+              <td class="status ok">200</td>
+              <td class="article-title"><a href="https://blog.silverandfit.com/tag/fitness/revamp-cardio" target="_blank">Revamp Your Cardio: No Running Required</a></td>
+            </tr>
+            
+            <tr>
+              <td class="url"><a href="https://health.clevelandclinic.org/exercise-heart-health" target="_blank">https://health.clevelandclinic.org/exercise-heart-health</a></td>
+              <td class="status ok">200</td>
+              <td class="article-title"><a href="https://blog.silverandfit.com/tag/fitness/revamp-cardio" target="_blank">Revamp Your Cardio: No Running Required</a></td>
+            </tr>
+            
+            <tr>
+              <td class="url"><a href="https://health.clevelandclinic.org/how-to-get-motivated-to-workout" target="_blank">https://health.clevelandclinic.org/how-to-get-motivated-to-workout</a></td>
+              <td class="status ok">200</td>
+              <td class="article-title"><a href="https://blog.silverandfit.com/tag/fitness/revamp-cardio" target="_blank">Revamp Your Cardio: No Running Required</a></td>
+            </tr>
+            
+            <tr>
+              <td class="url"><a href="https://health.clevelandclinic.org/is-it-bad-to-do-the-same-workout-routine-every-day" target="_blank">https://health.clevelandclinic.org/is-it-bad-to-do-the-same-workout-routine-every-day</a></td>
+              <td class="status ok">200</td>
+              <td class="article-title"><a href="https://blog.silverandfit.com/tag/fitness/revamp-cardio" target="_blank">Revamp Your Cardio: No Running Required</a></td>
+            </tr>
+            
+            <tr>
+              <td class="url"><a href="https://health.clevelandclinic.org/low-impact-cardio" target="_blank">https://health.clevelandclinic.org/low-impact-cardio</a></td>
+              <td class="status ok">200</td>
+              <td class="article-title"><a href="https://blog.silverandfit.com/tag/fitness/revamp-cardio" target="_blank">Revamp Your Cardio: No Running Required</a></td>
+            </tr>
+            
+            <tr>
+              <td class="url"><a href="https://health.clevelandclinic.org/the-many-benefits-of-a-cardio-workout" target="_blank">https://health.clevelandclinic.org/the-many-benefits-of-a-cardio-workout</a></td>
+              <td class="status ok">200</td>
+              <td class="article-title"><a href="https://blog.silverandfit.com/tag/fitness/revamp-cardio" target="_blank">Revamp Your Cardio: No Running Required</a></td>
+            </tr>
+            
+            <tr>
+              <td class="url"><a href="https://www.health.harvard.edu/exercise-and-fitness/a-three-pronged-approach-to-exercise" target="_blank">https://www.health.harvard.edu/exercise-and-fitness/a-three-pronged-approach-to-exercise</a></td>
+              <td class="status ok">200</td>
+              <td class="article-title"><a href="https://blog.silverandfit.com/tag/fitness/revamp-cardio" target="_blank">Revamp Your Cardio: No Running Required</a></td>
+            </tr>
+            
+            <tr>
+              <td class="url"><a href="https://utswmed.org/medblog/heart-cardio-workouts" target="_blank">https://utswmed.org/medblog/heart-cardio-workouts</a></td>
+              <td class="status ok">200</td>
+              <td class="article-title"><a href="https://blog.silverandfit.com/tag/fitness/revamp-cardio" target="_blank">Revamp Your Cardio: No Running Required</a></td>
+            </tr>
+            
+            <tr>
+              <td class="url"><a href="https://www.health.harvard.edu/exercise-and-fitness/rethinking-cardio-exercise" target="_blank">https://www.health.harvard.edu/exercise-and-fitness/rethinking-cardio-exercise</a></td>
+              <td class="status ok">200</td>
+              <td class="article-title"><a href="https://blog.silverandfit.com/tag/fitness/revamp-cardio" target="_blank">Revamp Your Cardio: No Running Required</a></td>
+            </tr>
+            
+            <tr>
+              <td class="url"><a href="https://www.health.harvard.edu/exercise-and-fitness/what-can-you-do-to-maintain-exercise-motivation" target="_blank">https://www.health.harvard.edu/exercise-and-fitness/what-can-you-do-to-maintain-exercise-motivation</a></td>
+              <td class="status ok">200</td>
+              <td class="article-title"><a href="https://blog.silverandfit.com/tag/fitness/revamp-cardio" target="_blank">Revamp Your Cardio: No Running Required</a></td>
+            </tr>
+            
+            <tr>
+              <td class="url"><a href="https://www.scripps.org/news_items/5394-8-ways-to-build-a-strong-relationship-with-your-doctor" target="_blank">https://www.scripps.org/news_items/5394-8-ways-to-build-a-strong-relationship-with-your-doctor</a></td>
+              <td class="status ok">200</td>
+              <td class="article-title"><a href="https://blog.silverandfit.com/tag/lifestyle/your-doctor" target="_blank">How to Build a Strong Relationship With Your Doctor</a></td>
+            </tr>
+            
+            <tr>
+              <td class="url"><a href="https://medlineplus.gov/talkingwithyourdoctor.html" target="_blank">https://medlineplus.gov/talkingwithyourdoctor.html</a></td>
+              <td class="status ok">200</td>
+              <td class="article-title"><a href="https://blog.silverandfit.com/tag/lifestyle/your-doctor" target="_blank">How to Build a Strong Relationship With Your Doctor</a></td>
+            </tr>
+            
+            <tr>
+              <td class="url"><a href="https://www.ucsfhealth.org/education/communicating-with-your-doctor" target="_blank">https://www.ucsfhealth.org/education/communicating-with-your-doctor</a></td>
+              <td class="status ok">200</td>
+              <td class="article-title"><a href="https://blog.silverandfit.com/tag/lifestyle/your-doctor" target="_blank">How to Build a Strong Relationship With Your Doctor</a></td>
+            </tr>
+            
+            <tr>
+              <td class="url"><a href="https://doi.org/10.1186/s12889-025-22552-3" target="_blank">https://doi.org/10.1186/s12889-025-22552-3</a></td>
+              <td class="status ok">200</td>
+              <td class="article-title"><a href="https://blog.silverandfit.com/tag/healthy-aging/creative-spark" target="_blank">Reignite Your Creative Spark for Better Health</a></td>
+            </tr>
+            
+            <tr>
+              <td class="url"><a href="https://www.apa.org/topics/trauma/writing-benefits#:~:text=Open%20Up!-,Writing%20About%20Trauma%20Reduces%20Stress%2C%20Aids%20Immunity,measures%20and%20improving%20life%20functioning." target="_blank">https://www.apa.org/topics/trauma/writing-benefits#:~:text=Open%20Up!-,Writing%20About%20Trauma%20Reduces%20Stress%2C%20Aids%20Immunity,measures%20and%20improving%20life%20functioning.</a></td>
+              <td class="status ok">200</td>
+              <td class="article-title"><a href="https://blog.silverandfit.com/tag/healthy-aging/creative-spark" target="_blank">Reignite Your Creative Spark for Better Health</a></td>
+            </tr>
+            
+            <tr>
+              <td class="url"><a href="https://diversushealth.org/mental-health-blog/the-mental-health-benefits-of-creativity/" target="_blank">https://diversushealth.org/mental-health-blog/the-mental-health-benefits-of-creativity/</a></td>
+              <td class="status ok">200</td>
+              <td class="article-title"><a href="https://blog.silverandfit.com/tag/healthy-aging/creative-spark" target="_blank">Reignite Your Creative Spark for Better Health</a></td>
+            </tr>
+            
+            <tr>
+              <td class="url"><a href="https://doi.org/10.4236/jss.2022.1012020" target="_blank">https://doi.org/10.4236/jss.2022.1012020</a></td>
+              <td class="status ok">200</td>
+              <td class="article-title"><a href="https://blog.silverandfit.com/tag/healthy-aging/creative-spark" target="_blank">Reignite Your Creative Spark for Better Health</a></td>
+            </tr>
+            
+            <tr>
+              <td class="url"><a href="https://www.health.harvard.edu/blog/art-therapy-another-way-to-help-manage-pain-2018071214243" target="_blank">https://www.health.harvard.edu/blog/art-therapy-another-way-to-help-manage-pain-2018071214243</a></td>
+              <td class="status ok">200</td>
+              <td class="article-title"><a href="https://blog.silverandfit.com/tag/healthy-aging/creative-spark" target="_blank">Reignite Your Creative Spark for Better Health</a></td>
+            </tr>
+            
+            <tr>
+              <td class="url"><a href="https://greatergood.berkeley.edu/article/item/how_nature_makes_you_kinder_happier_more_creative" target="_blank">https://greatergood.berkeley.edu/article/item/how_nature_makes_you_kinder_happier_more_creative</a></td>
+              <td class="status ok">200</td>
+              <td class="article-title"><a href="https://blog.silverandfit.com/tag/healthy-aging/creative-spark" target="_blank">Reignite Your Creative Spark for Better Health</a></td>
+            </tr>
+            
+            <tr>
+              <td class="url"><a href="https://www.wellpower.org/blog/the-many-benefits-of-creativity-for-our-mental-health/" target="_blank">https://www.wellpower.org/blog/the-many-benefits-of-creativity-for-our-mental-health/</a></td>
+              <td class="status ok">200</td>
+              <td class="article-title"><a href="https://blog.silverandfit.com/tag/healthy-aging/creative-spark" target="_blank">Reignite Your Creative Spark for Better Health</a></td>
+            </tr>
+            
+          </tbody>
+        </table>
+      </div>
+    </section>
+    
+  </div>
+
+  <script>
+    function toggleSection(header) {
+      header.classList.toggle('collapsed');
+      const content = header.nextElementSibling;
+      content.classList.toggle('hidden');
+    }
+  </script>
+</body>
+</html>

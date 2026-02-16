@@ -254,47 +254,90 @@ test.describe('Broken Link Tests', () => {
           const referenceLinks = await page.evaluate(() => {
             const links: string[] = [];
             
-            // Find all text nodes that contain "References" or "Reference"
-            const walker = document.createTreeWalker(
-              document.body,
-              NodeFilter.SHOW_TEXT,
-              null
-            );
+            // Find all elements that contain "References" heading text
+            const allElements = document.querySelectorAll('h1, h2, h3, h4, h5, h6, p, div, span, strong, b');
+            let referenceHeading: Element | null = null;
             
-            let referenceSection: Element | null = null;
-            let node: Text | null;
+            for (const el of allElements) {
+              // Check direct text content (not including children)
+              const directText = Array.from(el.childNodes)
+                .filter(n => n.nodeType === Node.TEXT_NODE)
+                .map(n => n.textContent?.trim() || '')
+                .join(' ')
+                .trim();
+              
+              if (/^References?\s*$/i.test(directText) || /^References?\s*$/i.test(el.textContent?.trim() || '')) {
+                // Make sure this element doesn't have lots of other content (i.e., it's just the heading)
+                if (el.textContent && el.textContent.trim().length < 15) {
+                  referenceHeading = el;
+                  break;
+                }
+              }
+            }
             
-            while (node = walker.nextNode() as Text | null) {
-              if (node.textContent && /^References?\s*$/i.test(node.textContent.trim())) {
-                // Found a References heading - get the parent element
-                referenceSection = node.parentElement;
+            if (!referenceHeading) {
+              return links;
+            }
+            
+            // Strategy: Get all sibling elements after the References heading and extract links
+            // Also check the parent container for structured reference lists
+            
+            // First, try to find the container that holds references
+            let container = referenceHeading.parentElement;
+            let foundRefsSection = false;
+            
+            // Walk up to find a suitable container (article, section, div with references)
+            while (container && container !== document.body) {
+              // Check if this container has multiple links after the heading
+              const containerLinks = container.querySelectorAll('a[href^="http"]');
+              if (containerLinks.length >= 3) {
+                break;
+              }
+              container = container.parentElement;
+            }
+            
+            if (!container) {
+              container = document.body;
+            }
+            
+            // Get all elements in document order starting from the reference heading
+            const allBodyElements = Array.from(document.body.querySelectorAll('*'));
+            const refIndex = allBodyElements.indexOf(referenceHeading);
+            
+            if (refIndex === -1) {
+              return links;
+            }
+            
+            // Look for the "About the Author" or footer section to know where to stop
+            let stopIndex = allBodyElements.length;
+            for (let i = refIndex + 1; i < allBodyElements.length; i++) {
+              const el = allBodyElements[i];
+              const text = el.textContent?.trim() || '';
+              // Stop at common section markers that come after References
+              if (/^About the Author/i.test(text) || 
+                  /^Recommended Articles/i.test(text) ||
+                  el.tagName === 'FOOTER' ||
+                  el.classList.contains('footer') ||
+                  el.id === 'footer') {
+                stopIndex = i;
                 break;
               }
             }
             
-            if (referenceSection) {
-              // Get all links that appear after the References heading
-              // Find the container that holds the references
-              let container = referenceSection.parentElement;
-              
-              // Walk through siblings and descendants to find links
-              let currentElement: Element | null = referenceSection;
-              let foundLinks = false;
-              
-              // Get all links in the document after the reference section
-              const allLinks = document.querySelectorAll('a[href]');
-              const refPosition = referenceSection.getBoundingClientRect().top;
-              
-              allLinks.forEach(link => {
-                const linkPosition = link.getBoundingClientRect().top;
-                // Only get links that appear after "References" text but before the footer
-                if (linkPosition > refPosition && linkPosition < refPosition + 500) {
-                  const href = link.getAttribute('href');
-                  if (href && href.startsWith('http') && !href.includes('silverandfit.com')) {
-                    links.push(href);
-                  }
+            // Collect all links between References heading and the stop point
+            const seenUrls = new Set<string>();
+            for (let i = refIndex; i < stopIndex; i++) {
+              const el = allBodyElements[i];
+              if (el.tagName === 'A') {
+                const href = (el as HTMLAnchorElement).href;
+                if (href && 
+                    href.startsWith('http') && 
+                    !href.includes('silverandfit.com') &&
+                    !seenUrls.has(href)) {
+                  seenUrls.add(href);
+                  links.push(href);
                 }
-              });
+              }
             }
             
             return links;
@@ -311,6 +354,12 @@ test.describe('Broken Link Tests', () => {
           
           if (referenceLinks.length > 0) {
             console.log(`   📄 "${article.title.substring(0, 50)}..." - ${referenceLinks.length} references`);
+            // Log each reference for verification
+            referenceLinks.forEach((link, idx) => {
+              console.log(`      ${idx + 1}. ${link.substring(0, 80)}${link.length > 80 ? '...' : ''}`);
+            });
+          } else {
+            console.log(`   📄 "${article.title.substring(0, 50)}..." - No references found`);
           }
           
         } catch (error) {
