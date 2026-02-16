@@ -521,7 +521,7 @@ test.describe('Broken Link Tests', () => {
     }
 
     // Generate HTML report
-    const reportHtml = generateHtmlReport(targetUrl, articles, linkResults, brokenLinks, timeoutLinks);
+    const reportHtml = generateHtmlReport(targetUrl, articles, linkResults, brokenLinks, timeoutLinks, botBlockedLinks);
     
     // Ensure reports directory exists
     const reportsDir = path.join(process.cwd(), 'broken-link-reports');
@@ -571,6 +571,125 @@ function generateHtmlReport(targetUrl: string, articles: ArticleInfo[], allLinks
   const workingLinks = allLinks.filter(link => !link.isBroken && !link.isTimeout && !link.isBotBlocked);
   const redirectedLinks = allLinks.filter(link => link.redirectedTo !== null && !link.isBroken && !link.isTimeout);
   const articlesWithRefs = articles.filter(a => a.referenceLinks.length > 0);
+
+  // Group broken links by status code
+  const notFoundLinks = brokenLinks.filter(l => l.status === 404);
+  const forbiddenLinks = brokenLinks.filter(l => l.status === 403);
+  const otherBrokenLinks = brokenLinks.filter(l => l.status !== 404 && l.status !== 403);
+  
+  // Helper to group links by domain
+  const groupByDomain = (links: LinkResult[]): [string, LinkResult[]][] => {
+    const grouped: Record<string, LinkResult[]> = {};
+    links.forEach(link => {
+      try {
+        const domain = new URL(link.originalUrl).hostname;
+        if (!grouped[domain]) grouped[domain] = [];
+        grouped[domain].push(link);
+      } catch {
+        if (!grouped['other']) grouped['other'] = [];
+        grouped['other'].push(link);
+      }
+    });
+    // Sort by count descending
+    return Object.entries(grouped).sort((a, b) => b[1].length - a[1].length);
+  };
+
+  // Generate 404 section
+  const generate404Section = (): string => {
+    if (notFoundLinks.length === 0) return '';
+    const grouped404 = groupByDomain(notFoundLinks);
+    return `
+    <section>
+      <h2 class="broken">🔍 404 Not Found (${notFoundLinks.length} links)</h2>
+      <p style="margin-bottom: 15px; color: #666;">These pages no longer exist. The content may have been moved or removed.</p>
+      ${grouped404.map(([domain, links]) => `
+      <div style="margin-bottom: 20px;">
+        <h3 style="color: #e74c3c; font-size: 1em; margin-bottom: 10px; padding: 8px; background: #fdf2f2; border-radius: 5px;">
+          📁 ${domain} (${links.length} broken)
+        </h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Reference URL</th>
+              <th>Article</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${links.map(link => `
+            <tr>
+              <td class="url"><a href="${link.originalUrl}" target="_blank">${link.originalUrl}</a></td>
+              <td class="article-title"><a href="${link.foundOnPage}" target="_blank">${link.articleTitle || 'Unknown'}</a></td>
+            </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      </div>
+      `).join('')}
+    </section>`;
+  };
+
+  // Generate 403 section
+  const generate403Section = (): string => {
+    if (forbiddenLinks.length === 0) return '';
+    const grouped403 = groupByDomain(forbiddenLinks);
+    return `
+    <section>
+      <h2 class="broken">🚫 403 Forbidden (${forbiddenLinks.length} links)</h2>
+      <p style="margin-bottom: 15px; color: #666;">These sites are blocking access. Some may be bot-blocking (try manually), others may require authentication or have been restricted.</p>
+      ${grouped403.map(([domain, links]) => `
+      <div style="margin-bottom: 20px;">
+        <h3 style="color: #c0392b; font-size: 1em; margin-bottom: 10px; padding: 8px; background: #fdf2f2; border-radius: 5px;">
+          🔒 ${domain} (${links.length} blocked)
+        </h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Reference URL</th>
+              <th>Article</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${links.map(link => `
+            <tr>
+              <td class="url"><a href="${link.originalUrl}" target="_blank">${link.originalUrl}</a></td>
+              <td class="article-title"><a href="${link.foundOnPage}" target="_blank">${link.articleTitle || 'Unknown'}</a></td>
+            </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      </div>
+      `).join('')}
+    </section>`;
+  };
+
+  // Generate other errors section
+  const generateOtherErrorsSection = (): string => {
+    if (otherBrokenLinks.length === 0) return '';
+    return `
+    <section>
+      <h2 class="broken">⚠️ Other Errors (${otherBrokenLinks.length} links)</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Reference URL</th>
+            <th>Status</th>
+            <th>Article</th>
+            <th>Error</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${otherBrokenLinks.map(link => `
+          <tr>
+            <td class="url"><a href="${link.originalUrl}" target="_blank">${link.originalUrl}</a></td>
+            <td class="status error">${link.status || 'Error'}</td>
+            <td class="article-title"><a href="${link.foundOnPage}" target="_blank">${link.articleTitle || 'Unknown'}</a></td>
+            <td>${link.errorMessage || link.statusText || '-'}</td>
+          </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    </section>`;
+  };
 
   return `
 <!DOCTYPE html>
@@ -765,31 +884,9 @@ function generateHtmlReport(targetUrl: string, articles: ArticleInfo[], allLinks
       </div>
     </div>
 
-    ${brokenLinks.length > 0 ? `
-    <section>
-      <h2 class="broken">❌ Broken Reference Links (${brokenLinks.length})</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Reference URL</th>
-            <th>Status</th>
-            <th>Article</th>
-            <th>Error</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${brokenLinks.map(link => `
-          <tr>
-            <td class="url"><a href="${link.originalUrl}" target="_blank">${link.originalUrl}</a></td>
-            <td class="status error">${link.status || 'Error'}</td>
-            <td class="article-title"><a href="${link.foundOnPage}" target="_blank">${link.articleTitle || 'Unknown'}</a></td>
-            <td>${link.errorMessage || link.statusText || '-'}</td>
-          </tr>
-          `).join('')}
-        </tbody>
-      </table>
-    </section>
-    ` : ''}
+    ${generate404Section()}
+    ${generate403Section()}
+    ${generateOtherErrorsSection()}
 
     ${botBlockedLinks.length > 0 ? `
     <section>
