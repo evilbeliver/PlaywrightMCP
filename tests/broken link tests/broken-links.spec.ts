@@ -11,6 +11,7 @@ interface LinkResult {
   redirectedTo: string | null;
   isBroken: boolean;
   isTimeout: boolean;
+  isBotBlocked: boolean;
   errorMessage: string | null;
 }
 
@@ -26,6 +27,65 @@ const MAX_PAGES_TO_CRAWL = parseInt(process.env.MAX_PAGES || '5'); // Default to
 const CRAWL_TIMEOUT = parseInt(process.env.CRAWL_TIMEOUT || '30000');
 const LINK_CHECK_TIMEOUT = parseInt(process.env.LINK_TIMEOUT || '10000');
 const MAX_RETRIES = parseInt(process.env.MAX_RETRIES || '2');
+const DELAY_BETWEEN_REQUESTS = parseInt(process.env.REQUEST_DELAY || '300'); // 300ms default
+
+// Browser-like headers to reduce bot blocking
+const BROWSER_HEADERS = {
+  'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+  'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
+  'Accept-Language': 'en-US,en;q=0.9',
+  'Accept-Encoding': 'gzip, deflate, br',
+  'Connection': 'keep-alive',
+  'Upgrade-Insecure-Requests': '1',
+  'Sec-Fetch-Dest': 'document',
+  'Sec-Fetch-Mode': 'navigate',
+  'Sec-Fetch-Site': 'none',
+  'Sec-Fetch-User': '?1',
+  'Cache-Control': 'max-age=0',
+};
+      
+// Known domains that commonly block automated requests but links are likely valid
+const BOT_BLOCKING_DOMAINS = [
+  'doi.org',
+  'dx.doi.org',
+  'tandfonline.com',
+  'sciencedirect.com',
+  'jamanetwork.com',
+  'hopkinsmedicine.org',
+  'mayoclinichealthsystem.org',
+  'newsnetwork.mayoclinic.org',
+  'publichealth.jhu.edu',
+  'nia.nih.gov',
+  'ncbi.nlm.nih.gov',  // NIH National Center for Biotechnology Information
+  'pubmed.ncbi.nlm.nih.gov',
+  'news.stanford.edu',
+  'jneb.org',
+  'wiley.com',
+  'springer.com',
+  'nature.com',
+  'bmj.com',
+  'nejm.org',
+  'thelancet.com',
+  'cell.com',
+  'pnas.org',
+  'oup.com',
+  'sagepub.com',
+  'mdpi.com',
+  'frontiersin.org',
+];
+
+function isSuspectedBotBlocking(url: string, status: number | null): boolean {
+  if (status !== 403 && status !== 405 && status !== 429) return false;
+  
+  try {
+    const hostname = new URL(url).hostname;
+    return BOT_BLOCKING_DOMAINS.some(domain => 
+      hostname === domain || hostname.endsWith('.' + domain)
+    );
+  } catch {
+    return false;
+  }
+}
 
 // Helper function to check a single link with retries and timeout handling
 async function checkLinkWithRetry(
@@ -392,9 +452,14 @@ test.describe('Broken Link Tests', () => {
     const linkResults: LinkResult[] = [];
     const brokenLinks: LinkResult[] = [];
     const timeoutLinks: LinkResult[] = [];
+    const botBlockedLinks: LinkResult[] = [];
 
     let checkedCount = 0;
     for (const [url, articleInfo] of allReferenceLinks) {
+      // Add delay between requests to avoid rate limiting
+      if (checkedCount > 0) {
+        await new Promise(resolve => setTimeout(resolve, DELAY_BETWEEN_REQUESTS));
+      }
       checkedCount++;
       await test.step(`[${checkedCount}/${allReferenceLinks.size}] Checking: ${url}`, async () => {
         const result: LinkResult = {
@@ -406,6 +471,7 @@ test.describe('Broken Link Tests', () => {
           redirectedTo: null,
           isBroken: false,
           isTimeout: false,
+          isBotBlocked: false,
           errorMessage: null,
         };
 
@@ -433,10 +499,18 @@ test.describe('Broken Link Tests', () => {
             console.log(`   ❌ Broken: ${url}`);
           }
         } else if (checkResult.status && checkResult.status >= 400) {
-          result.isBroken = true;
-          brokenLinks.push(result);
-          console.log(`   ❌ Broken (${checkResult.status}): ${url}`);
-          expect.soft(checkResult.status, `Reference link ${url} is broken (Status: ${checkResult.status})`).toBeLessThan(400);
+          // Check if this is likely bot blocking vs truly broken
+          if (isSuspectedBotBlocking(url, checkResult.status)) {
+            result.isBotBlocked = true;
+            botBlockedLinks.push(result);
+            console.log(`   🤖 Bot-blocked (${checkResult.status}): ${url}`);
+            // Don't fail the test for suspected bot blocking
+          } else {
+            result.isBroken = true;
+            brokenLinks.push(result);
+            console.log(`   ❌ Broken (${checkResult.status}): ${url}`);
+            expect.soft(checkResult.status, `Reference link ${url} is broken (Status: ${checkResult.status})`).toBeLessThan(400);
+          }
         } else {
           console.log(`   ✅ OK: ${url}`);
         }
@@ -471,8 +545,9 @@ test.describe('Broken Link Tests', () => {
     console.log(`   Articles scanned: ${articles.length}`);
     console.log(`   Articles with references: ${articlesWithRefs.length}`);
     console.log(`   Total reference links checked: ${linkResults.length}`);
-    console.log(`   Broken links found: ${brokenLinks.length}`);
-    console.log(`   Timeout links: ${timeoutLinks.length}`);
+    console.log(`   ❌ Broken links found: ${brokenLinks.length}`);
+    console.log(`   🤖 Bot-blocked (likely valid): ${botBlockedLinks.length}`);
+    console.log(`   ⏱️ Timeout links: ${timeoutLinks.length}`);
     console.log(`   Report saved to: ${reportPath}\n`);
 
     // Attach JSON summary
@@ -483,15 +558,16 @@ test.describe('Broken Link Tests', () => {
         articlesScanned: articles.map(a => ({ url: a.url, title: a.title, referenceCount: a.referenceLinks.length })),
         linkResults, 
         brokenLinks,
-        timeoutLinks 
+        timeoutLinks,
+        botBlockedLinks 
       }, null, 2)),
     });
   });
 });
 
-function generateHtmlReport(targetUrl: string, articles: ArticleInfo[], allLinks: LinkResult[], brokenLinks: LinkResult[], timeoutLinks: LinkResult[]): string {
+function generateHtmlReport(targetUrl: string, articles: ArticleInfo[], allLinks: LinkResult[], brokenLinks: LinkResult[], timeoutLinks: LinkResult[], botBlockedLinks: LinkResult[] = []): string {
   const timestamp = new Date().toLocaleString();
-  const workingLinks = allLinks.filter(link => !link.isBroken && !link.isTimeout);
+  const workingLinks = allLinks.filter(link => !link.isBroken && !link.isTimeout && !link.isBotBlocked);
   const redirectedLinks = allLinks.filter(link => link.redirectedTo !== null && !link.isBroken && !link.isTimeout);
   const articlesWithRefs = articles.filter(a => a.referenceLinks.length > 0);
 
@@ -578,6 +654,7 @@ function generateHtmlReport(targetUrl: string, articles: ArticleInfo[], allLinks
       border-bottom: 2px solid #eee;
     }
     h2.broken { border-color: #e74c3c; }
+    h2.bot-blocked { border-color: #e67e22; }
     h2.timeout { border-color: #95a5a6; }
     h2.redirected { border-color: #f39c12; }
     h2.working { border-color: #27ae60; }
@@ -613,6 +690,7 @@ function generateHtmlReport(targetUrl: string, articles: ArticleInfo[], allLinks
       font-weight: 600;
     }
     .status.error { color: #e74c3c; }
+    .status.bot-blocked { color: #e67e22; }
     .status.timeout { color: #95a5a6; }
     .status.redirect { color: #f39c12; }
     .status.ok { color: #27ae60; }
@@ -668,6 +746,10 @@ function generateHtmlReport(targetUrl: string, articles: ArticleInfo[], allLinks
         <h3>${brokenLinks.length}</h3>
         <p>Broken</p>
       </div>
+      <div class="stat-card" style="background: white;">
+        <h3 style="color: #e67e22;">${botBlockedLinks.length}</h3>
+        <p>Bot-Blocked</p>
+      </div>
       <div class="stat-card timeout">
         <h3>${timeoutLinks.length}</h3>
         <p>Timeouts</p>
@@ -703,6 +785,36 @@ function generateHtmlReport(targetUrl: string, articles: ArticleInfo[], allLinks
             <td>${link.errorMessage || link.statusText || '-'}</td>
           </tr>
           `).join('')}
+        </tbody>
+      </table>
+    </section>
+    ` : ''}
+
+    ${botBlockedLinks.length > 0 ? `
+    <section>
+      <h2 class="bot-blocked">🤖 Suspected Bot-Blocked Links (${botBlockedLinks.length})</h2>
+      <p style="margin-bottom: 15px; color: #666;">These links returned 403/405 from known bot-blocking domains. They likely work in a real browser and may not need action.</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Reference URL</th>
+            <th>Status</th>
+            <th>Article</th>
+            <th>Domain</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${botBlockedLinks.map(link => {
+            let domain = '';
+            try { domain = new URL(link.originalUrl).hostname; } catch {}
+            return `
+          <tr>
+            <td class="url"><a href="${link.originalUrl}" target="_blank">${link.originalUrl}</a></td>
+            <td class="status bot-blocked">${link.status || 'Error'}</td>
+            <td class="article-title"><a href="${link.foundOnPage}" target="_blank">${link.articleTitle || 'Unknown'}</a></td>
+            <td>${domain}</td>
+          </tr>
+          `;}).join('')}
         </tbody>
       </table>
     </section>
