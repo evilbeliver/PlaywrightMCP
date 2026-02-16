@@ -55,6 +55,7 @@ const BOT_BLOCKING_DOMAINS = [
   'mayoclinichealthsystem.org',
   'newsnetwork.mayoclinic.org',
   'publichealth.jhu.edu',
+  'hhs.gov',  // US Dept of Health and Human Services - aggressive bot blocking
   'nia.nih.gov',
   'ncbi.nlm.nih.gov',  // NIH National Center for Biotechnology Information
   'pubmed.ncbi.nlm.nih.gov',
