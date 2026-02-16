@@ -73,10 +73,12 @@ const BOT_BLOCKING_DOMAINS = [
   'sagepub.com',
   'mdpi.com',
   'frontiersin.org',
+  'fdc.nal.usda.gov',  // USDA FoodData Central - returns 404 for bot requests
 ];
 
 function isSuspectedBotBlocking(url: string, status: number | null): boolean {
-  if (status !== 403 && status !== 405 && status !== 429) return false;
+  // Some sites return 404 instead of 403 for bot blocking (e.g., fdc.nal.usda.gov)
+  if (status !== 403 && status !== 404 && status !== 405 && status !== 429) return false;
   
   try {
     const hostname = new URL(url).hostname;
