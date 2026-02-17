@@ -212,6 +212,13 @@ test.describe('Broken Link Tests', () => {
     console.log(`   Link check timeout: ${LINK_CHECK_TIMEOUT}ms (with ${MAX_RETRIES} retries)`);
     console.log(`   Target domain: ${targetDomain}\n`);
 
+    // Check if the target URL itself is a blog article (not just a listing page)
+    // If so, add it to the articles list to ensure it gets scanned
+    if (isBlogArticle(targetUrl)) {
+      articles.push({ url: targetUrl, title: '', referenceLinks: [] });
+      console.log(`   📝 Target URL is a blog article - added to scan list\n`);
+    }
+
     // Phase 1: Collect article URLs from listing pages
     console.log(`📚 Phase 1: Discovering blog articles...\n`);
     
@@ -262,16 +269,38 @@ test.describe('Broken Link Tests', () => {
           
           // Find pagination links to get more articles
           const paginationLinks = await page.locator('a[href*="/page/"]').all();
+          let maxPageNum = 0;
+          
           for (const link of paginationLinks) {
             const href = await link.getAttribute('href');
             if (href) {
               try {
                 const absoluteUrl = new URL(href, currentPageUrl).href;
-                if (!visitedListPages.has(absoluteUrl) && !listPagesToVisit.includes(absoluteUrl)) {
-                  listPagesToVisit.push(absoluteUrl);
+                // Track the highest page number we've seen (only positive numbers)
+                const pageMatch = absoluteUrl.match(/\/page\/(\d+)/);
+                if (pageMatch) {
+                  const pageNum = parseInt(pageMatch[1]);
+                  if (pageNum >= 0) {
+                    maxPageNum = Math.max(maxPageNum, pageNum);
+                    if (!visitedListPages.has(absoluteUrl) && !listPagesToVisit.includes(absoluteUrl)) {
+                      listPagesToVisit.push(absoluteUrl);
+                    }
+                  }
                 }
               } catch (e) {
                 // Invalid URL - skip
+              }
+            }
+          }
+          
+          // If we found pagination, probe for all pages up to max (windowed pagination fix)
+          // This ensures we don't miss pages that aren't directly linked
+          if (maxPageNum > 0) {
+            const baseUrl = new URL(targetUrl).origin + new URL(targetUrl).pathname.replace(/\/$/, '');
+            for (let i = 0; i <= maxPageNum; i++) {
+              const pageUrl = `${baseUrl}/page/${i}`;
+              if (!visitedListPages.has(pageUrl) && !listPagesToVisit.includes(pageUrl)) {
+                listPagesToVisit.push(pageUrl);
               }
             }
           }
@@ -298,7 +327,7 @@ test.describe('Broken Link Tests', () => {
       await test.step(`[${i + 1}/${articles.length}] Extracting references from: ${article.url}`, async () => {
         try {
           const response = await page.goto(article.url, { 
-            waitUntil: 'domcontentloaded',
+            waitUntil: 'load',
             timeout: CRAWL_TIMEOUT 
           });
           
@@ -306,6 +335,9 @@ test.describe('Broken Link Tests', () => {
             console.log(`   ⚠️ Could not load article: ${article.url}`);
             return;
           }
+          
+          // Small wait to ensure dynamic content (like References section) is fully rendered
+          await page.waitForTimeout(500);
           
           // Get article title
           const titleElement = await page.locator('h1').first();
@@ -432,10 +464,21 @@ test.describe('Broken Link Tests', () => {
     }
 
     const articlesWithRefs = articles.filter(a => a.referenceLinks.length > 0);
+    const articlesWithoutRefs = articles.filter(a => a.referenceLinks.length === 0);
     console.log(`\n📊 Phase 2 complete:`);
-    console.log(`   Articles processed: ${articles.length}`);
+    console.log(`   Total articles processed: ${articles.length}`);
     console.log(`   Articles with references: ${articlesWithRefs.length}`);
+    console.log(`   Articles WITHOUT references: ${articlesWithoutRefs.length}`);
     console.log(`   Unique reference links to check: ${allReferenceLinks.size}\n`);
+    
+    // Log articles without references for debugging
+    if (articlesWithoutRefs.length > 0) {
+      console.log(`\n⚠️ Articles with NO references detected:`);
+      articlesWithoutRefs.forEach((article, idx) => {
+        console.log(`   ${idx + 1}. ${article.url}`);
+      });
+      console.log('');
+    }
 
     test.info().attachments.push({ 
       name: 'articles-processed', 
@@ -545,8 +588,9 @@ test.describe('Broken Link Tests', () => {
 
     // Log summary
     console.log(`\n📊 Reference Link Check Summary:`);
-    console.log(`   Articles scanned: ${articles.length}`);
+    console.log(`   Total articles scanned: ${articles.length}`);
     console.log(`   Articles with references: ${articlesWithRefs.length}`);
+    console.log(`   Articles WITHOUT references: ${articles.length - articlesWithRefs.length}`);
     console.log(`   Total reference links checked: ${linkResults.length}`);
     console.log(`   ❌ Broken links found: ${brokenLinks.length}`);
     console.log(`   🤖 Bot-blocked (likely valid): ${botBlockedLinks.length}`);
@@ -857,8 +901,16 @@ function generateHtmlReport(targetUrl: string, articles: ArticleInfo[], allLinks
 
     <div class="summary">
       <div class="stat-card articles">
-        <h3>${articlesWithRefs.length}</h3>
-        <p>Articles w/ Refs</p>
+        <h3>${articles.length}</h3>
+        <p>Total Articles</p>
+      </div>
+      <div class="stat-card" style="background: white;">
+        <h3 style="color: #9b59b6;">${articlesWithRefs.length}</h3>
+        <p>With Refs</p>
+      </div>
+      <div class="stat-card" style="background: white;">
+        <h3 style="color: #95a5a6;">${articles.length - articlesWithRefs.length}</h3>
+        <p>No Refs</p>
       </div>
       <div class="stat-card total">
         <h3>${allLinks.length}</h3>
@@ -972,7 +1024,7 @@ function generateHtmlReport(targetUrl: string, articles: ArticleInfo[], allLinks
     ` : ''}
 
     <section>
-      <h2 class="articles collapsible" onclick="toggleSection(this)">📖 Articles Scanned (${articlesWithRefs.length} with references)</h2>
+      <h2 class="articles collapsible" onclick="toggleSection(this)">📖 All Articles Scanned (${articles.length} total: ${articlesWithRefs.length} with refs, ${articles.length - articlesWithRefs.length} without)</h2>
       <div class="content">
         <table>
           <thead>
@@ -980,14 +1032,16 @@ function generateHtmlReport(targetUrl: string, articles: ArticleInfo[], allLinks
               <th>Article Title</th>
               <th>URL</th>
               <th>References</th>
+              <th>Status</th>
             </tr>
           </thead>
           <tbody>
-            ${articlesWithRefs.map(article => `
-            <tr>
+            ${articles.sort((a, b) => b.referenceLinks.length - a.referenceLinks.length).map(article => `
+            <tr style="${article.referenceLinks.length === 0 ? 'background-color: #fff3cd;' : ''}">
               <td>${article.title}</td>
               <td class="url"><a href="${article.url}" target="_blank">${article.url}</a></td>
               <td>${article.referenceLinks.length}</td>
+              <td>${article.referenceLinks.length > 0 ? '✅ Has Refs' : '⚠️ No Refs Detected'}</td>
             </tr>
             `).join('')}
           </tbody>
