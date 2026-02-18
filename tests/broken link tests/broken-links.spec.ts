@@ -144,51 +144,37 @@ async function checkLinkWithRetry(
 // Check if a URL is a blog article
 // Blog articles on this site have URLs like: /tag/category/article-slug
 function isBlogArticle(url: string): boolean {
-  // Exclude non-article patterns
+  // Exclude only obvious non-article patterns (files, query/hash, admin, etc.)
   const excludePatterns = [
     /\/author\//i,
     /\/page\/\d+/i,
     /\/page\/-?\d+/i,
     /\/category\//i,
+    /\/admin\//i,
     /\?/,  // Query parameters
+    /#/,   // Hash links
     /\.(pdf|jpg|jpeg|png|gif|svg|webp|ico|zip|mp4|mp3|wav|css|js|json|xml|txt|woff|woff2|ttf|eot)$/i,
-    /\/hubfs\//i,  // HubSpot file storage
-    /\/hs-fs\//i,  // HubSpot file system
+    /\/hubfs\//i,
+    /\/hs-fs\//i,
     /\/wp-content\//i,
     /\/wp-includes\//i,
-    /\/#/,  // Hash links
     /javascript:/i,
     /mailto:/i,
   ];
-  
   for (const pattern of excludePatterns) {
     if (pattern.test(url)) {
       return false;
     }
   }
-  
   try {
     const urlObj = new URL(url);
     const pathname = urlObj.pathname;
-    
-    // Blog articles have URLs like /tag/category/article-slug (3 parts: tag, category, slug)
-    // e.g., /tag/fitness/revamp-cardio or /tag/nutrition/healthy-fats
-    const tagMatch = pathname.match(/^\/tag\/([^\/]+)\/([^\/]+)\/?$/);
-    if (tagMatch) {
-      const slug = tagMatch[2];
-      // Article slugs typically have hyphens and are descriptive
-      if (slug && slug.includes('-') && slug.length > 5) {
-        return true;
-      }
+    // Exclude home page and tag/category root pages
+    if (pathname === '/' || pathname === '' || pathname === '/tag' || pathname === '/category') {
+      return false;
     }
-    
-    // Also check for direct article URLs like /article-title-here
-    const pathParts = pathname.split('/').filter(p => p.length > 0);
-    if (pathParts.length === 1 && pathParts[0].includes('-') && pathParts[0].length > 10) {
-      return true;
-    }
-    
-    return false;
+    // Accept anything else that is an internal link and not excluded
+    return true;
   } catch {
     return false;
   }
@@ -199,92 +185,53 @@ test.describe('Broken Link Tests', () => {
     // Configure the target URL - can be parameterized via environment variable
     const targetUrl = process.env.TARGET_URL || 'https://blog.silverandfit.com/';
     const targetDomain = new URL(targetUrl).hostname;
-    
-    // Track pages and articles
-    const visitedListPages = new Set<string>();
-    const listPagesToVisit: string[] = [targetUrl];
     const articles: ArticleInfo[] = [];
     const allReferenceLinks = new Map<string, { articleUrl: string; articleTitle: string }>(); // url -> article info
-    
-    const crawlLimit = MAX_PAGES_TO_CRAWL === 0 ? 'unlimited' : MAX_PAGES_TO_CRAWL;
+
+    // Explicitly visit all 19 paginated blog listing pages
+    const totalPages = 19;
+    const listingPages: string[] = [targetUrl];
+    for (let i = 2; i <= totalPages; i++) {
+      listingPages.push(`${targetUrl.replace(/\/$/, '')}/page/${i}`);
+    }
+
     console.log(`\n🔍 Starting blog reference link scan of ${targetUrl}`);
-    console.log(`   Max listing pages to crawl: ${crawlLimit} (each page has ~10 articles)`);
+    console.log(`   Will visit all ${totalPages} listing pages (each page has ~10 articles)`);
     console.log(`   Link check timeout: ${LINK_CHECK_TIMEOUT}ms (with ${MAX_RETRIES} retries)`);
     console.log(`   Target domain: ${targetDomain}\n`);
 
-    // Check if the target URL itself is a blog article (not just a listing page)
-    // If so, add it to the articles list to ensure it gets scanned
-    if (isBlogArticle(targetUrl)) {
-      articles.push({ url: targetUrl, title: '', referenceLinks: [] });
-      console.log(`   📝 Target URL is a blog article - added to scan list\n`);
-    }
-
     // Phase 1: Collect article URLs from listing pages
     console.log(`📚 Phase 1: Discovering blog articles...\n`);
-    
-    while (listPagesToVisit.length > 0 && (MAX_PAGES_TO_CRAWL === 0 || visitedListPages.size < MAX_PAGES_TO_CRAWL)) {
-      const currentPageUrl = listPagesToVisit.shift()!;
-      
-      if (visitedListPages.has(currentPageUrl)) {
-        continue;
-      }
-      
-      visitedListPages.add(currentPageUrl);
-      
+    const foundArticleUrls = new Set<string>();
+    for (const currentPageUrl of listingPages) {
       await test.step(`Scanning listing page: ${currentPageUrl}`, async () => {
         try {
-          const response = await page.goto(currentPageUrl, { 
+          const response = await page.goto(currentPageUrl, {
             waitUntil: 'domcontentloaded',
-            timeout: CRAWL_TIMEOUT 
+            timeout: CRAWL_TIMEOUT
           });
-          
           if (!response || response.status() >= 400) {
             console.log(`   ⚠️ Could not load page: ${currentPageUrl} (Status: ${response?.status() || 'No response'})`);
             return;
           }
-          
           // Find all article links on this listing page
           const articleLinks = await page.locator('a').all();
           let foundArticles = 0;
-          
           for (const link of articleLinks) {
             const href = await link.getAttribute('href');
             if (href) {
               try {
                 const absoluteUrl = new URL(href, currentPageUrl).href.split('#')[0];
                 const linkDomain = new URL(absoluteUrl).hostname;
-                
-                // Only process internal links that are blog articles
-                if ((linkDomain === targetDomain || linkDomain.endsWith('.' + targetDomain)) && 
-                    isBlogArticle(absoluteUrl) &&
-                    !articles.some(a => a.url === absoluteUrl)) {
-                  articles.push({ url: absoluteUrl, title: '', referenceLinks: [] });
-                  foundArticles++;
-                }
-              } catch (e) {
-                // Invalid URL - skip
-              }
-            }
-          }
-          
-          // Find pagination links to get more articles
-          const paginationLinks = await page.locator('a[href*="/page/"]').all();
-          let maxPageNum = 0;
-          
-          for (const link of paginationLinks) {
-            const href = await link.getAttribute('href');
-            if (href) {
-              try {
-                const absoluteUrl = new URL(href, currentPageUrl).href;
-                // Track the highest page number we've seen (only positive numbers)
-                const pageMatch = absoluteUrl.match(/\/page\/(\d+)/);
-                if (pageMatch) {
-                  const pageNum = parseInt(pageMatch[1]);
-                  if (pageNum >= 0) {
-                    maxPageNum = Math.max(maxPageNum, pageNum);
-                    if (!visitedListPages.has(absoluteUrl) && !listPagesToVisit.includes(absoluteUrl)) {
-                      listPagesToVisit.push(absoluteUrl);
-                    }
+                // Only process internal links
+                if ((linkDomain === targetDomain || linkDomain.endsWith('.' + targetDomain))) {
+                  if (isBlogArticle(absoluteUrl) && !foundArticleUrls.has(absoluteUrl)) {
+                    foundArticleUrls.add(absoluteUrl);
+                    foundArticles++;
+                  } else if (!isBlogArticle(absoluteUrl)) {
+                    // Log excluded URLs for debugging
+                    // Uncomment the next line to debug exclusions:
+                    // console.log('Excluded (not blog article):', absoluteUrl);
                   }
                 }
               } catch (e) {
@@ -292,30 +239,30 @@ test.describe('Broken Link Tests', () => {
               }
             }
           }
-          
-          // If we found pagination, probe for all pages up to max (windowed pagination fix)
-          // This ensures we don't miss pages that aren't directly linked
-          if (maxPageNum > 0) {
-            const baseUrl = new URL(targetUrl).origin + new URL(targetUrl).pathname.replace(/\/$/, '');
-            for (let i = 0; i <= maxPageNum; i++) {
-              const pageUrl = `${baseUrl}/page/${i}`;
-              if (!visitedListPages.has(pageUrl) && !listPagesToVisit.includes(pageUrl)) {
-                listPagesToVisit.push(pageUrl);
-              }
-            }
-          }
-          
           console.log(`   📄 ${currentPageUrl}`);
           console.log(`      Found ${foundArticles} new article links`);
-          
         } catch (error) {
           console.log(`   ❌ Error scanning ${currentPageUrl}: ${error instanceof Error ? error.message : String(error)}`);
         }
       });
     }
+    // Add all found articles to the articles array
+    for (const url of foundArticleUrls) {
+      articles.push({ url, title: '', referenceLinks: [] });
+    }
+    console.log(`\n📊 Phase 1 complete:`);
+    console.log(`   Listing pages scanned: ${listingPages.length}`);
+    console.log(`   Unique articles discovered: ${articles.length}\n`);
+    console.log(`   Article URLs:`);
+    for (const url of foundArticleUrls) {
+      console.log(`      ${url}`);
+    }
+    console.log(`\n   TOTAL UNIQUE BLOG ARTICLES: ${articles.length}\n`);
+
+        // ...existing code...
 
     console.log(`\n📊 Phase 1 complete:`);
-    console.log(`   Listing pages scanned: ${visitedListPages.size}`);
+    console.log(`   Listing pages scanned: 19`);
     console.log(`   Articles discovered: ${articles.length}\n`);
 
     // Phase 2: Visit each article and extract reference links
@@ -348,68 +295,58 @@ test.describe('Broken Link Tests', () => {
           // Look for text containing "References" or "Reference" heading
           const referenceLinks = await page.evaluate(() => {
             const links: string[] = [];
-            
-            // Find all elements that contain "References" heading text
+            // Find all elements that could be a References heading
             const allElements = document.querySelectorAll('h1, h2, h3, h4, h5, h6, p, div, span, strong, b');
             let referenceHeading: Element | null = null;
-            
             for (const el of allElements) {
+              // Check for <p><strong>References</strong></p> and similar patterns
+              const isStrongRef = el.tagName === 'P' && el.children.length === 1 && el.children[0].tagName === 'STRONG' && /^References?\s*$/i.test(el.children[0].textContent?.trim() || '');
               // Check direct text content (not including children)
               const directText = Array.from(el.childNodes)
                 .filter(n => n.nodeType === Node.TEXT_NODE)
                 .map(n => n.textContent?.trim() || '')
                 .join(' ')
                 .trim();
-              
-              if (/^References?\s*$/i.test(directText) || /^References?\s*$/i.test(el.textContent?.trim() || '')) {
+              if (
+                isStrongRef ||
+                /^References?\s*$/i.test(directText) ||
+                /^References?\s*$/i.test(el.textContent?.trim() || '')
+              ) {
                 // Make sure this element doesn't have lots of other content (i.e., it's just the heading)
-                if (el.textContent && el.textContent.trim().length < 15) {
+                if ((el.textContent && el.textContent.trim().length < 30) || isStrongRef) {
                   referenceHeading = el;
                   break;
                 }
               }
             }
-            
             if (!referenceHeading) {
               return links;
             }
-            
-            // Strategy: Get all sibling elements after the References heading and extract links
-            // Also check the parent container for structured reference lists
-            
-            // First, try to find the container that holds references
+            // Find the container for references
             let container = referenceHeading.parentElement;
-            let foundRefsSection = false;
-            
             // Walk up to find a suitable container (article, section, div with references)
             while (container && container !== document.body) {
-              // Check if this container has multiple links after the heading
               const containerLinks = container.querySelectorAll('a[href^="http"]');
-              if (containerLinks.length >= 3) {
+              if (containerLinks.length >= 2) {
                 break;
               }
               container = container.parentElement;
             }
-            
             if (!container) {
               container = document.body;
             }
-            
             // Get all elements in document order starting from the reference heading
             const allBodyElements = Array.from(document.body.querySelectorAll('*'));
             const refIndex = allBodyElements.indexOf(referenceHeading);
-            
             if (refIndex === -1) {
               return links;
             }
-            
             // Look for the "About the Author" or footer section to know where to stop
             let stopIndex = allBodyElements.length;
             for (let i = refIndex + 1; i < allBodyElements.length; i++) {
               const el = allBodyElements[i];
               const text = el.textContent?.trim() || '';
-              // Stop at common section markers that come after References
-              if (/^About the Author/i.test(text) || 
+              if (/^About the Author/i.test(text) ||
                   /^Recommended Articles/i.test(text) ||
                   el.tagName === 'FOOTER' ||
                   el.classList.contains('footer') ||
@@ -418,15 +355,14 @@ test.describe('Broken Link Tests', () => {
                 break;
               }
             }
-            
             // Collect all links between References heading and the stop point
             const seenUrls = new Set<string>();
             for (let i = refIndex; i < stopIndex; i++) {
               const el = allBodyElements[i];
               if (el.tagName === 'A') {
                 const href = (el as HTMLAnchorElement).href;
-                if (href && 
-                    href.startsWith('http') && 
+                if (href &&
+                    href.startsWith('http') &&
                     !href.includes('silverandfit.com') &&
                     !seenUrls.has(href)) {
                   seenUrls.add(href);
@@ -434,7 +370,6 @@ test.describe('Broken Link Tests', () => {
                 }
               }
             }
-            
             return links;
           });
           
